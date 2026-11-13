@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
 import { getServices, serviceHref } from '../lib/content';
 
 const services = await getServices();
@@ -9,12 +10,13 @@ const services = await getServices();
   <section class="section not-found">
     <div class="container not-found__inner">
       <div>
+        <p class="eyebrow">Foutcode 404</p>
         <h1>Deze pagina konden we niet vinden</h1>
         <p class="lead">
           Misschien is de pagina verplaatst of klopt het adres niet helemaal. Via de links hieronder kom je weer op weg.
         </p>
         <div class="btn-row">
-          <a href="/" class="btn">Naar de homepage</a>
+          <a href="/" class="btn">Naar de homepage <Icon name="arrow" class="icon--arrow" /></a>
           <a href="/contact/" class="btn btn--secondary">Neem contact op</a>
         </div>
       </div>
@@ -25,7 +27,7 @@ const services = await getServices();
             services.map((s) => (
               <li>
                 <a href={serviceHref(s)} class="link-arrow">
-                  {s.data.title}
+                  {s.data.title} <Icon name="arrow" />
                 </a>
               </li>
             ))

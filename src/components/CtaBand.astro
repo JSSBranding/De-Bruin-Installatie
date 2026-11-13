@@ -1,7 +1,4 @@
 ---
-/**
- * Afsluitend contactblok. Het telefoonnummer staat groot, zoals de belettering op de bus.
- */
 import Icon from './Icon.astro';
 import { company, primaryCta } from '../config/site';
 
@@ -13,110 +10,87 @@ interface Props {
 }
 const {
   title = 'Plannen voor je badkamer, verwarming of verduurzaming?',
-  text = 'Vertel ons wat je in gedachten hebt. We denken met je mee en laten je weten wat er in jouw woning mogelijk is.',
-  ctaLabel = 'Stuur een bericht',
+  text = 'Vertel ons wat je in gedachten hebt. We denken met je mee en laten je weten wat er mogelijk is in jouw woning.',
+  ctaLabel = primaryCta.label,
   ctaHref = primaryCta.href,
 } = Astro.props;
 ---
 
-<section class="contact-band on-dark" aria-labelledby="cta-title">
-  <div class="container contact-band__inner">
-    <div class="contact-band__text">
+<section class="cta-band on-dark" aria-labelledby="cta-title">
+  <div class="container cta-band__inner">
+    <div class="cta-band__text">
+      <p class="eyebrow eyebrow--light">Contact</p>
       <h2 id="cta-title">{title}</h2>
       <p>{text}</p>
-      <a href={ctaHref} class="btn btn--light">{ctaLabel}</a>
     </div>
-    {
-      company.phone && (
-        <div class="contact-band__lettering">
-          <p class="contact-band__call">Liever even bellen?</p>
-          <a href={company.phone.href} class="contact-band__phone">
+    <div class="cta-band__actions">
+      <a href={ctaHref} class="btn btn--light">
+        {ctaLabel}
+        <Icon name="arrow" class="icon--arrow" />
+      </a>
+      {
+        company.phone && (
+          <a href={company.phone.href} class="btn btn--ghost-light">
             <Icon name="phone" />
-            <span>{company.phone.display}</span>
+            Bel {company.phone.display}
           </a>
-          {company.email && (
-            <a href={`mailto:${company.email}`} class="contact-band__mail">
-              {company.email}
-            </a>
-          )}
-        </div>
-      )
-    }
+        )
+      }
+    </div>
   </div>
 </section>
 
 <style>
-  .contact-band {
+  .cta-band {
+    position: relative;
+    overflow: hidden;
     background: var(--color-blue);
     color: var(--color-white);
-    padding-block: clamp(3rem, 2rem + 4vw, 5.5rem);
+    padding-block: clamp(3rem, 2rem + 4vw, 5rem);
   }
-  .contact-band__inner {
+  /* Gekantelde tegels uit het beeldmerk, zeer subtiel */
+  .cta-band::after {
+    content: '';
+    position: absolute;
+    right: -6rem;
+    bottom: -9rem;
+    inline-size: 26rem;
+    block-size: 26rem;
+    background:
+      linear-gradient(rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.07)) 0 0 / 55% 50% no-repeat,
+      linear-gradient(rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.05)) 100% 100% / 48% 50% no-repeat;
+    transform: rotate(-8deg);
+    pointer-events: none;
+  }
+  .cta-band__inner {
+    position: relative;
+    z-index: 1;
     display: grid;
-    gap: var(--space-7);
+    gap: var(--space-6);
     align-items: end;
   }
-  .contact-band h2 {
+  .cta-band h2 {
     color: var(--color-white);
-    font-size: var(--fs-h2);
-    max-inline-size: 20ch;
+    max-inline-size: 22ch;
   }
-  .contact-band__text p {
-    margin-block: var(--space-4) var(--space-6);
-    max-inline-size: 34rem;
+  .cta-band__text p:not(.eyebrow) {
+    margin-top: var(--space-4);
+    max-inline-size: 38rem;
     color: var(--color-blue-tint);
     font-size: var(--fs-lead);
   }
-  .contact-band__call {
-    font-style: italic;
-    color: var(--color-blue-soft);
-  }
-  .contact-band__phone {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5em;
-    margin-top: var(--space-2);
-    font-size: clamp(1.9rem, 1.2rem + 3.2vw, 3.75rem);
-    font-weight: var(--fw-bold);
-    line-height: 1.05;
-    letter-spacing: -0.01em;
-    color: var(--color-white);
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  .contact-band__phone :global(.icon) {
-    inline-size: 0.8em;
-    block-size: 0.8em;
-    color: var(--color-green);
-    stroke-width: 2.25;
-  }
-  .contact-band__phone:hover {
-    color: var(--color-white);
-    text-decoration: underline;
-    text-decoration-color: var(--color-green);
-    text-decoration-thickness: 3px;
-    text-underline-offset: 0.15em;
-  }
-  .contact-band__mail {
-    display: inline-block;
-    margin-top: var(--space-3);
-    font-size: 1.125rem;
-    font-weight: var(--fw-medium);
-    color: var(--color-white);
-    text-decoration-color: var(--color-green);
-    text-underline-offset: 0.25em;
-  }
-  .contact-band__mail:hover {
-    color: var(--color-white);
-  }
-  .contact-band__lettering {
-    display: grid;
-    justify-items: start;
+  .cta-band__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
   }
   @media (min-width: 64em) {
-    .contact-band__inner {
+    .cta-band__inner {
       grid-template-columns: 1fr auto;
-      gap: var(--space-9);
+    }
+    .cta-band__actions {
+      flex-direction: column;
+      align-items: stretch;
     }
   }
 </style>

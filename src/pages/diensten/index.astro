@@ -1,8 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
-import ServiceList from '../../components/ServiceList.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
 import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
 ---
 
 <BaseLayout
@@ -11,19 +12,21 @@ import CtaBand from '../../components/CtaBand.astro';
 >
   <PageHero
     title="Onze diensten"
+    eyebrow="Wat we doen"
     intro="De Bruin Installatie is een allround installatiebedrijf voor werk in en rondom je woning. Bij nieuwbouw, bij renovatie en voor het onderhoud van bestaande installaties."
     breadcrumbs={[{ label: 'Diensten' }]}
   />
 
   <section class="section" aria-label="Overzicht van diensten">
     <div class="container">
-      <ServiceList headingLevel="h2" detailed />
+      <ServiceGrid headingLevel="h2" />
     </div>
   </section>
 
   <section class="section section--alt combo" aria-labelledby="combi-title">
     <div class="container combo__inner">
       <div>
+        <p class="eyebrow">Alles in één hand</p>
         <h2 id="combi-title">Meerdere installaties tegelijk aanpakken?</h2>
       </div>
       <div class="combo__text">
@@ -35,7 +38,7 @@ import CtaBand from '../../components/CtaBand.astro';
         <p>
           Twijfel je bij welke dienst je vraag hoort? Beschrijf gewoon je situatie, dan denken we met je mee.
         </p>
-        <a href="/contact/" class="link-arrow">Leg je vraag aan ons voor</a>
+        <a href="/contact/" class="link-arrow">Leg je vraag aan ons voor <Icon name="arrow" /></a>
       </div>
     </div>
   </section>
