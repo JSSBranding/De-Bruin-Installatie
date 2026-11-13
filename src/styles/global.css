@@ -1,0 +1,388 @@
+@import './tokens.css';
+
+/* ── Reset ─────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  color: var(--text);
+  background: var(--surface);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+main {
+  flex: 1 0 auto;
+}
+img,
+svg,
+picture {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+}
+
+/* ── Typografie ────────────────────────────────────────── */
+h1,
+h2,
+h3,
+h4 {
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+  color: var(--text);
+  text-wrap: balance;
+}
+h1 {
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+}
+h2 {
+  font-size: var(--fs-h2);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-size: var(--fs-h3);
+}
+h4 {
+  font-size: var(--fs-h4);
+}
+p {
+  text-wrap: pretty;
+}
+strong {
+  font-weight: var(--fw-bold);
+}
+a {
+  color: var(--link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+a:hover {
+  color: var(--color-blue-dark);
+  text-decoration-thickness: 2px;
+}
+
+.lead {
+  font-size: var(--fs-lead);
+  line-height: 1.55;
+  color: var(--text);
+}
+.muted {
+  color: var(--text-muted);
+}
+
+/* Label boven koppen: gespatieerd, met blauw vierkantje (uit de banner) */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--color-green-ink);
+  margin-bottom: var(--space-4);
+}
+.eyebrow::before {
+  content: '';
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  background: var(--color-blue);
+  flex: none;
+}
+.eyebrow--light {
+  color: var(--color-white);
+}
+.eyebrow--light::before {
+  background: var(--color-green);
+}
+
+/* Prose (markdown-inhoud) */
+.prose > * + * {
+  margin-top: var(--space-4);
+}
+.prose h2 {
+  font-size: var(--fs-h3);
+  margin-top: var(--space-7);
+}
+.prose h3 {
+  font-size: var(--fs-h4);
+  margin-top: var(--space-6);
+}
+.prose ul {
+  padding-left: 0;
+  list-style: none;
+}
+.prose ul li {
+  position: relative;
+  padding-left: 1.4rem;
+}
+.prose ul li + li {
+  margin-top: var(--space-2);
+}
+.prose ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  background: var(--color-blue);
+}
+
+/* Lijst met vierkante opsommingstekens */
+.check-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+.check-list li {
+  position: relative;
+  padding-left: 1.6rem;
+}
+.check-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  inline-size: 0.6rem;
+  block-size: 0.6rem;
+  background: var(--color-blue);
+}
+
+/* ── Layout ────────────────────────────────────────────── */
+.container {
+  inline-size: 100%;
+  max-inline-size: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+.container--narrow {
+  max-inline-size: calc(var(--container-narrow) + 2 * var(--gutter));
+}
+.section {
+  padding-block: var(--section-y);
+}
+.section--alt {
+  background: var(--surface-alt);
+}
+.section--tight-top {
+  padding-top: 0;
+}
+.section-head {
+  max-inline-size: 44rem;
+  margin-bottom: var(--space-7);
+}
+.section-head p {
+  margin-top: var(--space-4);
+  color: var(--text-muted);
+}
+.section-head--row {
+  max-inline-size: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+.section-head--row > div {
+  max-inline-size: 44rem;
+}
+
+.stack > * + * {
+  margin-top: var(--stack, var(--space-4));
+}
+
+/* ── Knoppen ───────────────────────────────────────────── */
+.btn {
+  --btn-bg: var(--color-blue);
+  --btn-fg: var(--color-white);
+  --btn-border: var(--color-blue);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-block-size: 3rem;
+  padding: 0.75rem 1.4rem;
+  border: 2px solid var(--btn-border);
+  border-radius: var(--radius-sm);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-base);
+  line-height: 1.2;
+  text-decoration: none;
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.btn:hover {
+  --btn-bg: var(--color-blue-dark);
+  --btn-border: var(--color-blue-dark);
+  color: var(--btn-fg);
+  text-decoration: none;
+}
+.btn .icon {
+  inline-size: 1.1em;
+  block-size: 1.1em;
+  transition: transform var(--dur) var(--ease);
+}
+.btn:hover .icon--arrow {
+  transform: translateX(3px);
+}
+.btn--secondary {
+  --btn-bg: transparent;
+  --btn-fg: var(--color-blue);
+  --btn-border: var(--color-blue);
+}
+.btn--secondary:hover {
+  --btn-bg: var(--color-blue-tint);
+  --btn-fg: var(--color-blue-dark);
+  --btn-border: var(--color-blue-dark);
+}
+.btn--light {
+  --btn-bg: var(--color-white);
+  --btn-fg: var(--color-blue);
+  --btn-border: var(--color-white);
+}
+.btn--light:hover {
+  --btn-bg: var(--color-blue-tint);
+  --btn-fg: var(--color-blue-dark);
+  --btn-border: var(--color-blue-tint);
+}
+.btn--ghost-light {
+  --btn-bg: transparent;
+  --btn-fg: var(--color-white);
+  --btn-border: rgb(255 255 255 / 0.6);
+}
+.btn--ghost-light:hover {
+  --btn-bg: rgb(255 255 255 / 0.12);
+  --btn-fg: var(--color-white);
+  --btn-border: var(--color-white);
+}
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* Tekstlink met pijl */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  color: var(--color-blue);
+}
+.link-arrow .icon {
+  inline-size: 1em;
+  block-size: 1em;
+  transition: transform var(--dur) var(--ease);
+}
+.link-arrow:hover {
+  text-decoration: underline;
+}
+.link-arrow:hover .icon {
+  transform: translateX(3px);
+}
+
+/* ── Toegankelijkheid ──────────────────────────────────── */
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+.on-dark :focus-visible,
+.on-dark:focus-visible {
+  outline-color: var(--color-white);
+}
+.visually-hidden {
+  position: absolute !important;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -100px;
+  z-index: 100;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-blue);
+  color: var(--color-white);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: var(--space-3);
+  color: var(--color-white);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

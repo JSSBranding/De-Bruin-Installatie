@@ -1,0 +1,293 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { nav, primaryCta, company } from '../config/site';
+
+interface Props {
+  hasProjects: boolean;
+}
+const { hasProjects } = Astro.props;
+const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const items = nav.filter((item) => !('requiresProjects' in item && item.requiresProjects) || hasProjects);
+const isActive = (match: readonly string[]) => match.some((m) => path.startsWith(m));
+const isCurrent = (href: string) => path === href;
+---
+
+<header class="site-header" data-header>
+  <div class="container site-header__bar">
+    <a href="/" class="site-header__brand" aria-label={`${company.name}, naar de homepage`}>
+      <Logo width={176} eager class="site-header__logo" />
+    </a>
+
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-expanded="false"
+      aria-controls="site-menu"
+      data-menu-toggle
+    >
+      <span class="menu-toggle__label" data-menu-label>Menu</span>
+      <Icon name="menu" class="menu-toggle__open" />
+      <Icon name="close" class="menu-toggle__close" />
+    </button>
+
+    <div class="site-menu" id="site-menu" data-menu>
+      <nav aria-label="Hoofdmenu">
+        <ul class="site-nav" role="list">
+          {
+            items.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class:list={['site-nav__link', { 'is-active': isActive(item.match) }]}
+                  aria-current={isCurrent(item.href) ? 'page' : isActive(item.match) ? 'true' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class="site-menu__actions">
+        {
+          company.phone && (
+            <a href={company.phone.href} class="header-phone">
+              <Icon name="phone" />
+              <span class="header-phone__text">
+                <span class="visually-hidden">Bel </span>
+                {company.phone.display}
+              </span>
+            </a>
+          )
+        }
+        <a
+          href={primaryCta.href}
+          class="btn header-cta"
+          aria-current={isCurrent(primaryCta.href) ? 'page' : undefined}
+        >
+          {primaryCta.label}
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const label = header?.querySelector<HTMLElement>('[data-menu-label]');
+  const desktop = window.matchMedia('(min-width: 64em)');
+
+  function setOpen(open: boolean, returnFocus = false) {
+    if (!header || !toggle) return;
+    header.toggleAttribute('data-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    if (label) label.textContent = open ? 'Sluiten' : 'Menu';
+    if (!open && returnFocus) toggle.focus();
+  }
+
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && header?.hasAttribute('data-open')) setOpen(false, true);
+  });
+  header?.querySelectorAll('[data-menu] a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  desktop.addEventListener('change', (e) => e.matches && setOpen(false));
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--color-white);
+    border-bottom: var(--rule);
+  }
+  .site-header__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    min-block-size: var(--header-h);
+  }
+  .site-header__brand {
+    display: block;
+    flex: none;
+    padding-block: var(--space-2);
+  }
+  .site-header__brand :global(.site-header__logo) {
+    inline-size: 9.5rem;
+  }
+
+  /* Mobiel menu */
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: 2.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    color: var(--color-ink);
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-sm);
+  }
+  .menu-toggle :global(.icon) {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+  .menu-toggle :global(.menu-toggle__close),
+  [data-open] .menu-toggle :global(.menu-toggle__open) {
+    display: none;
+  }
+  [data-open] .menu-toggle :global(.menu-toggle__close) {
+    display: block;
+  }
+  :global(html:not(.js)) .menu-toggle {
+    display: none;
+  }
+
+  .site-menu {
+    display: none;
+  }
+  :global(html:not(.js)) .site-menu,
+  [data-open] .site-menu {
+    display: block;
+  }
+  [data-open] .site-menu {
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    max-block-size: calc(100dvh - var(--header-h));
+    overflow-y: auto;
+    padding: var(--space-3) var(--gutter) var(--space-6);
+    background: var(--color-white);
+    border-bottom: 4px solid var(--color-green);
+    box-shadow: 0 16px 24px -16px rgb(25 23 27 / 0.25);
+  }
+  :global(html:not(.js)) .site-header__bar {
+    flex-wrap: wrap;
+  }
+
+  .site-nav {
+    display: grid;
+  }
+  .site-nav__link {
+    display: flex;
+    align-items: center;
+    min-block-size: 3.25rem;
+    border-bottom: var(--rule);
+    font-size: 1.125rem;
+    font-weight: var(--fw-medium);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .site-nav__link:hover {
+    color: var(--color-blue);
+  }
+  .site-nav__link.is-active {
+    color: var(--color-blue);
+    box-shadow: inset 4px 0 0 var(--color-green);
+    padding-left: var(--space-4);
+  }
+  .site-menu__actions {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+  .header-phone {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-block-size: 2.75rem;
+    font-weight: var(--fw-medium);
+    color: var(--color-ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .header-phone :global(.icon) {
+    inline-size: 1.15rem;
+    block-size: 1.15rem;
+    color: var(--color-blue);
+  }
+  .header-phone:hover {
+    color: var(--color-blue);
+  }
+
+  @media (min-width: 64em) {
+    .site-header__brand :global(.site-header__logo) {
+      inline-size: 11rem;
+    }
+    .menu-toggle {
+      display: none;
+    }
+    .site-menu,
+    :global(html:not(.js)) .site-menu {
+      display: flex;
+      align-items: center;
+      gap: var(--space-6);
+    }
+    .site-nav {
+      display: flex;
+      gap: var(--space-1);
+    }
+    .site-nav__link {
+      position: relative;
+      min-block-size: var(--header-h);
+      padding-inline: var(--space-3);
+      border-bottom: 0;
+      font-size: var(--fs-sm);
+    }
+    .site-nav__link::after {
+      content: '';
+      position: absolute;
+      inset-inline: var(--space-3);
+      bottom: -1px;
+      block-size: 3px;
+      background: var(--color-green);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--dur) var(--ease);
+    }
+    .site-nav__link:hover::after,
+    .site-nav__link.is-active::after {
+      transform: scaleX(1);
+    }
+    .site-nav__link.is-active {
+      box-shadow: none;
+      padding-left: var(--space-3);
+    }
+    .site-menu__actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+      margin-top: 0;
+    }
+    .header-phone {
+      font-size: var(--fs-sm);
+    }
+    .header-cta {
+      min-block-size: 2.75rem;
+      padding: 0.6rem 1.1rem;
+      font-size: var(--fs-sm);
+    }
+  }
+  @media (min-width: 64em) and (max-width: 74.99em) {
+    .header-phone__text {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+    }
+    .header-phone {
+      justify-content: center;
+      min-inline-size: 2.75rem;
+    }
+    .site-menu {
+      gap: var(--space-4);
+    }
+  }
+</style>

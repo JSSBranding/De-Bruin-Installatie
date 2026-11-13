@@ -1,0 +1,391 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Media from '../components/Media.astro';
+import Icon from '../components/Icon.astro';
+import ServiceGrid from '../components/ServiceGrid.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PartnerLogos from '../components/PartnerLogos.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { company, primaryCta } from '../config/site';
+import { getServices, getProjects, serviceHref } from '../lib/content';
+
+const services = await getServices();
+const projects = await getProjects();
+const featured = (projects.filter((p) => p.data.featured).length ? projects.filter((p) => p.data.featured) : projects).slice(0, 3);
+
+const approach = [
+  {
+    icon: 'chat',
+    title: 'Persoonlijk contact',
+    text: 'Je hebt direct contact met de mensen die het werk uitvoeren. Korte lijnen, duidelijke afspraken.',
+  },
+  {
+    icon: 'clipboard',
+    title: 'Deskundig advies',
+    text: 'We kijken naar je woning en je wensen, en adviseren wat echt bij je past. Ook als dat iets anders is dan je dacht.',
+  },
+  {
+    icon: 'check',
+    title: 'Zorgvuldige uitvoering',
+    text: 'Vakmanschap tot in de details. We werken netjes en nemen de tijd om het goed te doen.',
+  },
+] as const;
+---
+
+<BaseLayout
+  title="Installatiebedrijf in Sint-Oedenrode | De Bruin Installatie"
+  description="De Bruin Installatie uit Sint-Oedenrode: badkamers, cv-installaties, warmtepompen, ventilatie, loodgieterswerk en onderhoud. Vakmanschap en persoonlijk advies."
+>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__text">
+        <p class="eyebrow">Installatiebedrijf in {company.city}</p>
+        <h1>
+          De Bruin Installatie.
+          <span class="hero__accent">Vertrouwd in installatietechniek.</span>
+        </h1>
+        <p class="lead">
+          Van complete badkamers tot verwarmingsinstallaties en duurzame oplossingen. De Bruin Installatie staat voor
+          vakmanschap, persoonlijk advies en installatiewerk dat met zorg wordt uitgevoerd.
+        </p>
+        <div class="btn-row">
+          <a href={primaryCta.href} class="btn">
+            {primaryCta.label}
+            <Icon name="arrow" class="icon--arrow" />
+          </a>
+          <a href="/diensten/" class="btn btn--secondary">Bekijk onze diensten</a>
+        </div>
+      </div>
+      <div class="hero__media">
+        <Media id="home.hero" eager sizes="(min-width: 64em) 620px, 100vw" />
+      </div>
+    </div>
+
+    <nav class="hero__services" aria-label="Snel naar een dienst">
+      <div class="container">
+        <ul role="list">
+          {
+            services.map((s) => (
+              <li>
+                <a href={serviceHref(s)}>{s.data.shortTitle}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+  </section>
+
+  <!-- Introductie -->
+  <section class="section intro" aria-labelledby="intro-title">
+    <div class="container intro__inner">
+      <div class="intro__media">
+        <Media id="home.intro" sizes="(min-width: 64em) 460px, 100vw" />
+      </div>
+      <div class="intro__text">
+        <p class="eyebrow">Over ons</p>
+        <h2 id="intro-title">Eén vakpartner voor installaties in en om je woning</h2>
+        <p class="lead">
+          Een nieuwe badkamer, een betrouwbare verwarmingsinstallatie of je woning verduurzamen? De Bruin Installatie
+          denkt met je mee en zorgt voor een oplossing die past bij jouw wensen en woning.
+        </p>
+        <p>
+          We werken aan woningen in nieuwbouw en renovatie, en verzorgen ook het onderhoud van bestaande installaties.
+          Daarbij combineren we traditioneel vakmanschap met moderne installatietechniek.
+        </p>
+        <a href="/over-ons/" class="link-arrow">Maak kennis met De Bruin Installatie <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diensten -->
+  <section class="section section--alt" aria-labelledby="diensten-title">
+    <div class="container">
+      <div class="section-head section-head--row">
+        <div>
+          <p class="eyebrow">Diensten</p>
+          <h2 id="diensten-title">Waarmee we je kunnen helpen</h2>
+          <p>Kies een onderwerp en lees wat we voor je kunnen doen.</p>
+        </div>
+        <a href="/diensten/" class="link-arrow">Alle diensten op een rij <Icon name="arrow" /></a>
+      </div>
+      <ServiceGrid />
+    </div>
+  </section>
+
+  <!-- Werkwijze -->
+  <section class="section approach" aria-labelledby="werkwijze-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Werkwijze</p>
+        <h2 id="werkwijze-title">Persoonlijk, deskundig en zorgvuldig</h2>
+        <p>Wat je van ons kunt verwachten, van het eerste gesprek tot de oplevering.</p>
+      </div>
+      <ol class="approach__list" role="list">
+        {
+          approach.map((item, i) => (
+            <li class="approach__item">
+              <span class="approach__num" aria-hidden="true" data-num={String(i + 1).padStart(2, '0')} />
+              <span class="approach__icon" aria-hidden="true">
+                <Icon name={item.icon} />
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Projecten: alleen als er publiceerbare projecten zijn -->
+  {
+    featured.length > 0 && (
+      <section class="section section--alt" aria-labelledby="projecten-title">
+        <div class="container">
+          <div class="section-head section-head--row">
+            <div>
+              <p class="eyebrow">Projecten</p>
+              <h2 id="projecten-title">Uitgelicht werk</h2>
+            </div>
+            <a href="/projecten/" class="link-arrow">
+              Alle projecten <Icon name="arrow" />
+            </a>
+          </div>
+          <ul class="project-grid" role="list">
+            {featured.map((p) => (
+              <li>
+                <ProjectCard project={p} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <PartnerLogos />
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    overflow: clip;
+    padding-top: clamp(2rem, 1rem + 4vw, 4.5rem);
+    background: linear-gradient(var(--surface-alt), var(--surface-alt)) right top / 100% 72% no-repeat;
+  }
+  .hero__inner {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+    padding-bottom: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+  }
+  .hero h1 {
+    font-size: clamp(2.25rem, 1.55rem + 3vw, 3.5rem);
+    max-inline-size: 16ch;
+    hyphens: manual;
+  }
+  .hero__accent {
+    display: block;
+    color: var(--color-blue);
+  }
+  .hero .lead {
+    margin-top: var(--space-5);
+    max-inline-size: 36rem;
+  }
+  .hero .btn-row {
+    margin-top: var(--space-6);
+  }
+  .hero__media {
+    position: relative;
+    isolation: isolate;
+  }
+  /* Twee gekantelde tegels uit het beeldmerk */
+  .hero__media::before,
+  .hero__media::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    transform: rotate(-8deg);
+  }
+  .hero__media::before {
+    inset: -5% 45% 50% -3%;
+    background: var(--color-grey-light);
+  }
+  .hero__media::after {
+    inset: 62% -3% -6% 55%;
+    background: var(--color-grey);
+  }
+  .hero__media :global(.media) {
+    box-shadow: 0 30px 50px -30px rgb(25 23 27 / 0.45);
+  }
+
+  .hero__services {
+    border-block: var(--rule);
+    background: var(--color-white);
+  }
+  .hero__services ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 var(--space-5);
+    padding-block: var(--space-3);
+  }
+  .hero__services a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-block-size: 2.75rem;
+    font-weight: var(--fw-medium);
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .hero__services a::before {
+    content: '';
+    inline-size: 0.6rem;
+    block-size: 0.6rem;
+    background: var(--color-blue);
+    transition: background-color var(--dur) var(--ease);
+  }
+  .hero__services a:hover {
+    color: var(--color-blue);
+  }
+  .hero__services a:hover::before {
+    background: var(--color-green);
+  }
+
+  @media (min-width: 64em) {
+    .hero {
+      background-size: 45% 100%;
+    }
+    .hero__inner {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: var(--space-8);
+      padding-bottom: var(--space-9);
+    }
+    .hero__services ul {
+      justify-content: space-between;
+    }
+  }
+
+  /* Intro */
+  .intro__inner {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  .intro__text > * + * {
+    margin-top: var(--space-4);
+  }
+  .intro__text h2 {
+    margin-top: 0;
+    max-inline-size: 20ch;
+  }
+  .intro__text .link-arrow {
+    margin-top: var(--space-5);
+  }
+  .intro__media {
+    position: relative;
+    max-inline-size: 30rem;
+  }
+  .intro__media :global(.media) {
+    aspect-ratio: 4 / 3;
+  }
+  @media (min-width: 64em) {
+    .intro__media :global(.media) {
+      aspect-ratio: 4 / 5;
+    }
+  }
+  .intro__media::after {
+    content: '';
+    position: absolute;
+    left: -0.75rem;
+    bottom: -0.75rem;
+    inline-size: 40%;
+    block-size: 4px;
+    background: var(--color-green);
+  }
+  @media (min-width: 64em) {
+    .intro__inner {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--space-9);
+    }
+  }
+
+  /* Werkwijze */
+  .approach__list {
+    display: grid;
+    gap: var(--space-5);
+    counter-reset: step;
+  }
+  .approach__item {
+    position: relative;
+    padding: var(--space-6) var(--space-5) var(--space-5);
+    border-top: 3px solid var(--color-blue);
+    background: var(--color-white);
+  }
+  .approach__num::before {
+    content: attr(data-num);
+  }
+  .approach__num {
+    position: absolute;
+    top: var(--space-5);
+    right: var(--space-5);
+    font-size: 2.5rem;
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    color: var(--color-grey-light);
+  }
+  .approach__icon {
+    display: grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    margin-bottom: var(--space-5);
+    background: var(--color-green);
+    color: var(--color-ink);
+  }
+  .approach__icon :global(.icon) {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+  }
+  .approach__item h3 {
+    margin-bottom: var(--space-2);
+  }
+  .approach__item p {
+    color: var(--text-muted);
+  }
+  @media (min-width: 48em) {
+    .approach__list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .approach__item {
+      border: var(--rule);
+      border-top: 3px solid var(--color-blue);
+    }
+  }
+
+  .project-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .project-grid > li {
+    display: flex;
+  }
+  .project-grid > li > :global(*) {
+    flex: 1;
+  }
+  @media (min-width: 40em) {
+    .project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .project-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

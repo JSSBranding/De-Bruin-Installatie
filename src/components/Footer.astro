@@ -1,0 +1,208 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { company, hasEmail, hasPhone } from '../config/site';
+import { getServices, serviceHref } from '../lib/content';
+
+interface Props {
+  hasProjects: boolean;
+}
+const { hasProjects } = Astro.props;
+const services = await getServices();
+const year = new Date().getFullYear();
+const a = company.address;
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__grid">
+    <div class="site-footer__about">
+      <a href="/" class="site-footer__brand" aria-label={`${company.name}, naar de homepage`}>
+        <Logo width={200} />
+      </a>
+      <p>
+        Allround installatiebedrijf uit {company.city} voor badkamers, verwarming, warmtepompen, ventilatie, leidingwerk
+        en onderhoud.
+      </p>
+    </div>
+
+    <nav class="site-footer__col" aria-labelledby="footer-diensten">
+      <h2 id="footer-diensten" class="site-footer__title">Diensten</h2>
+      <ul role="list">
+        {
+          services.map((s) => (
+            <li>
+              <a href={serviceHref(s)}>{s.data.title}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <nav class="site-footer__col" aria-labelledby="footer-bedrijf">
+      <h2 id="footer-bedrijf" class="site-footer__title">Bedrijf</h2>
+      <ul role="list">
+        <li><a href="/over-ons/">Over ons</a></li>
+        {
+          hasProjects && (
+            <li>
+              <a href="/projecten/">Projecten</a>
+            </li>
+          )
+        }
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/privacy/">Privacyverklaring</a></li>
+      </ul>
+    </nav>
+
+    <div class="site-footer__col">
+      <h2 class="site-footer__title">Contact</h2>
+      <ul role="list" class="site-footer__contact">
+        {
+          hasPhone && company.phone && (
+            <li>
+              <Icon name="phone" />
+              <a href={company.phone.href}>{company.phone.display}</a>
+            </li>
+          )
+        }
+        {
+          hasEmail && (
+            <li>
+              <Icon name="mail" />
+              <a href={`mailto:${company.email}`}>{company.email}</a>
+            </li>
+          )
+        }
+        <li>
+          <Icon name="pin" />
+          <span>
+            {
+              company.showAddress ? (
+                <>
+                  {a.street}
+                  <br />
+                  {a.postalCode} {a.city}
+                </>
+              ) : (
+                company.city
+              )
+            }
+          </span>
+        </li>
+      </ul>
+      <a href="/contact/" class="link-arrow site-footer__cta">
+        Stuur een bericht
+        <Icon name="arrow" />
+      </a>
+    </div>
+  </div>
+
+  <div class="site-footer__bottom">
+    <div class="container site-footer__bottom-inner">
+      <p>© {year} {company.name}</p>
+      <ul role="list">
+        {company.kvk && <li>KvK {company.kvk}</li>}
+        <li><a href="/privacy/">Privacy</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    background: var(--surface-alt);
+    border-top: 4px solid var(--color-green);
+    font-size: var(--fs-sm);
+  }
+  .site-footer__grid {
+    display: grid;
+    gap: var(--space-7) var(--space-6);
+    padding-block: var(--space-8) var(--space-7);
+  }
+  .site-footer__brand {
+    display: inline-block;
+    margin-bottom: var(--space-4);
+  }
+  .site-footer__brand :global(img) {
+    inline-size: 12rem;
+  }
+  .site-footer__about p {
+    max-inline-size: 22rem;
+    color: var(--text-muted);
+  }
+  .site-footer__title {
+    margin-bottom: var(--space-4);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-green-ink);
+  }
+  .site-footer__col ul {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .site-footer__col a {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 2.25rem;
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .site-footer__col a:hover {
+    color: var(--color-blue);
+    text-decoration: underline;
+  }
+  .site-footer__contact li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+  .site-footer__contact li > span {
+    padding-block: 0.45rem;
+  }
+  .site-footer__contact :global(.icon) {
+    flex: none;
+    inline-size: 1.1rem;
+    block-size: 1.1rem;
+    margin-top: 0.55rem;
+    color: var(--color-blue);
+  }
+  .site-footer__contact a {
+    overflow-wrap: anywhere;
+  }
+  .site-footer__col .site-footer__cta {
+    margin-top: var(--space-4);
+    color: var(--color-blue);
+  }
+  .site-footer__bottom {
+    border-top: var(--rule);
+    color: var(--text-muted);
+  }
+  .site-footer__bottom-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding-block: var(--space-5);
+  }
+  .site-footer__bottom ul {
+    display: flex;
+    gap: var(--space-5);
+  }
+  .site-footer__bottom a {
+    color: inherit;
+  }
+
+  @media (min-width: 40em) {
+    .site-footer__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .site-footer__grid {
+      grid-template-columns: 1.4fr 1.2fr 0.8fr 1.1fr;
+    }
+  }
+</style>

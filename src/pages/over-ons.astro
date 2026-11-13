@@ -1,0 +1,163 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Media from '../components/Media.astro';
+import Icon from '../components/Icon.astro';
+import Pending from '../components/Pending.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { company } from '../config/site';
+
+const values = [
+  {
+    title: 'Persoonlijke aandacht',
+    text: 'Je hebt contact met de mensen die het werk ook echt uitvoeren. Dat maakt de lijnen kort en de afspraken duidelijk.',
+  },
+  {
+    title: 'Vakmanschap en moderne techniek',
+    text: 'We combineren traditioneel vakmanschap met moderne installatietechniek en duurzame oplossingen.',
+  },
+  {
+    title: 'Breed inzetbaar',
+    text: 'Van badkamer tot warmtepomp en van nieuwbouw tot renovatie: je kunt bij ons terecht voor uiteenlopende installatievragen.',
+  },
+  {
+    title: 'Zorgvuldig en eerlijk',
+    text: 'We adviseren wat bij jouw woning past en voeren het werk uit met oog voor kwaliteit en detail.',
+  },
+];
+---
+
+<BaseLayout
+  title="Over ons"
+  description="Maak kennis met De Bruin Installatie uit Sint-Oedenrode: een allround installatiebedrijf met een persoonlijke werkwijze, vakmanschap en oog voor duurzame oplossingen."
+>
+  <PageHero
+    title="Een betrokken vakpartner uit Sint-Oedenrode"
+    eyebrow="Over ons"
+    intro={`${company.name} is een allround installatiebedrijf uit ${company.city}. We verzorgen installatiewerk in en rondom woningen, bij nieuwbouw en renovatie, en zorgen met onderhoud en service dat je installaties goed blijven werken.`}
+    breadcrumbs={[{ label: 'Over ons' }]}
+  />
+
+  <section class="section section--tight-top" aria-label="Teamfoto">
+    <div class="container">
+      <Media id="about.hero" sizes="(min-width: 76rem) 1200px, 100vw" />
+    </div>
+  </section>
+
+  <section class="section section--tight-top" aria-labelledby="dennis-title">
+    <div class="container about-split">
+      <div class="about-split__media">
+        <Media id="about.dennis" sizes="(min-width: 64em) 420px, 100vw" />
+      </div>
+      <div class="about-split__text">
+        <p class="eyebrow">Dennis de Bruin en het team</p>
+        <h2 id="dennis-title">Korte lijnen, persoonlijk contact</h2>
+        <p class="lead">
+          Achter {company.name} staat {company.owner}. Samen met zijn team verzorgt hij installatiewerk met oog
+          voor kwaliteit en een persoonlijke aanpak.
+        </p>
+        <p>
+          Bij ons heb je contact met de mensen die het werk ook echt uitvoeren. We nemen de tijd om je situatie te
+          begrijpen, denken met je mee over de mogelijkheden en houden je op de hoogte tijdens de uitvoering.
+        </p>
+        <Pending title="Nog aan te leveren">
+          Het persoonlijke verhaal van Dennis, de geschiedenis van het bedrijf en (indien gewenst) een korte voorstelling
+          van de teamleden met hun foto's. Er worden hier bewust geen namen, functies of kwalificaties verzonnen.
+        </Pending>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="waarden-title">
+    <div class="container">
+      <div class="section-head">
+        <p class="eyebrow">Waar we voor staan</p>
+        <h2 id="waarden-title">Zo werken we</h2>
+      </div>
+      <ul class="values" role="list">
+        {
+          values.map((v) => (
+            <li>
+              <h3>{v.title}</h3>
+              <p>{v.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="werk-title">
+    <div class="container about-split about-split--reverse">
+      <div class="about-split__text">
+        <p class="eyebrow">Ons werk</p>
+        <h2 id="werk-title">Voor nieuwbouw, renovatie en onderhoud</h2>
+        <p>
+          Of je nu een badkamer laat vernieuwen, je verwarming wilt vervangen of je woning stap voor stap verduurzaamt: we
+          kijken naar het geheel. Badkamer, leidingwerk, verwarming en ventilatie hangen met elkaar samen. Daarom stemmen
+          we ze op elkaar af.
+        </p>
+        <a href="/diensten/" class="link-arrow">Bekijk onze diensten <Icon name="arrow" /></a>
+      </div>
+      <div class="about-split__media">
+        <Media id="about.werk" sizes="(min-width: 64em) 520px, 100vw" />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand title="Kennismaken?" text="Vertel ons over je plannen. We denken graag met je mee." />
+</BaseLayout>
+
+<style>
+  .about-split {
+    display: grid;
+    gap: var(--space-7);
+    align-items: center;
+  }
+  .about-split__text > * + * {
+    margin-top: var(--space-4);
+  }
+  .about-split__text .link-arrow,
+  .about-split__text :global(.pending) {
+    margin-top: var(--space-6);
+  }
+  .about-split__media {
+    max-inline-size: 32rem;
+  }
+  @media (min-width: 64em) {
+    .about-split {
+      grid-template-columns: 5fr 7fr;
+      gap: var(--space-9);
+    }
+    .about-split--reverse {
+      grid-template-columns: 7fr 5fr;
+    }
+  }
+  .values {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .values li {
+    padding: var(--space-5);
+    background: var(--color-white);
+    border-top: 3px solid var(--color-blue);
+  }
+  .values h3 {
+    font-size: var(--fs-h4);
+    margin-bottom: var(--space-2);
+  }
+  .values p {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  @media (min-width: 40em) {
+    .values {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .values {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>

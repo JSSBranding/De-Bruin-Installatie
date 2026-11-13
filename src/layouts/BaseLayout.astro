@@ -1,0 +1,88 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import DevNotice from '../components/DevNotice.astro';
+import { company, isProduction } from '../config/site';
+import { getProjects } from '../lib/content';
+import logoAsset from '../assets/brand/logo-de-bruin-installatie.png';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Standaard true; false voor bv. 404 */
+  index?: boolean;
+  /** Afwijkende canonical (bv. bij gedeelde inhoud) */
+  canonical?: string;
+  ogType?: 'website' | 'article';
+}
+
+const { title, description, index = true, ogType = 'website' } = Astro.props;
+const fullTitle = title.includes(company.name) ? title : `${title} | ${company.name}`;
+const canonical = new URL(Astro.props.canonical ?? Astro.url.pathname, Astro.site).href;
+const robots = isProduction && index ? 'index, follow' : 'noindex, nofollow';
+const hasProjects = (await getProjects()).length > 0;
+const ogImage = new URL(logoAsset.src, Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': ['HVACBusiness', 'Plumber'],
+  name: company.name,
+  url: company.url,
+  logo: ogImage,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: company.city,
+    addressCountry: 'NL',
+    ...(company.showAddress
+      ? { streetAddress: company.address.street, postalCode: company.address.postalCode }
+      : {}),
+  },
+  ...(company.contactConfirmed && company.phone ? { telephone: company.phone.href.replace('tel:', '') } : {}),
+  ...(company.contactConfirmed && company.email ? { email: company.email } : {}),
+  ...(company.foundedYear ? { foundingDate: String(company.foundedYear) } : {}),
+};
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="preload" href="/fonts/ubuntu-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/ubuntu-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#005da7" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content="nl_NL" />
+    <meta property="og:site_name" content={company.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+
+    {isProduction && <link rel="sitemap" href="/sitemap-index.xml" />}
+    {isProduction && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <a class="skip-link" href="#inhoud">Direct naar de inhoud</a>
+    {!isProduction && <DevNotice />}
+    <Header hasProjects={hasProjects} />
+    <main id="inhoud" tabindex="-1">
+      <slot />
+    </main>
+    <Footer hasProjects={hasProjects} />
+  </body>
+</html>

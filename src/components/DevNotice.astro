@@ -1,0 +1,33 @@
+---
+import { siteEnv, formEndpoint } from '../config/site';
+const envLabel = siteEnv === 'staging' ? 'Testomgeving' : 'Ontwikkelversie';
+---
+
+<aside class="dev-notice" aria-label="Status van deze versie">
+  <div class="container dev-notice__inner">
+    <strong>{envLabel}</strong>
+    <span>Conceptinhoud, nog niet goedgekeurd door De Bruin Installatie. Niet geïndexeerd.</span>
+    {!formEndpoint && <span>Contactformulier nog niet gekoppeld.</span>}
+  </div>
+</aside>
+
+<style>
+  .dev-notice {
+    background: var(--color-ink);
+    color: var(--color-white);
+    font-size: var(--fs-xs);
+    line-height: 1.4;
+  }
+  .dev-notice__inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+    padding-block: 0.45rem;
+  }
+  .dev-notice strong {
+    font-weight: var(--fw-medium);
+    color: var(--color-green);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+  }
+</style>

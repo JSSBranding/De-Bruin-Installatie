@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { getServices, serviceHref } from '../lib/content';
+
+const services = await getServices();
+---
+
+<BaseLayout title="Pagina niet gevonden" description="Deze pagina bestaat niet (meer)." index={false}>
+  <section class="section not-found">
+    <div class="container not-found__inner">
+      <div>
+        <p class="eyebrow">Foutcode 404</p>
+        <h1>Deze pagina konden we niet vinden</h1>
+        <p class="lead">
+          Misschien is de pagina verplaatst of klopt het adres niet helemaal. Via de links hieronder kom je weer op weg.
+        </p>
+        <div class="btn-row">
+          <a href="/" class="btn">Naar de homepage <Icon name="arrow" class="icon--arrow" /></a>
+          <a href="/contact/" class="btn btn--secondary">Neem contact op</a>
+        </div>
+      </div>
+      <nav aria-labelledby="nf-diensten">
+        <h2 id="nf-diensten">Onze diensten</h2>
+        <ul role="list">
+          {
+            services.map((s) => (
+              <li>
+                <a href={serviceHref(s)} class="link-arrow">
+                  {s.data.title} <Icon name="arrow" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found__inner {
+    display: grid;
+    gap: var(--space-8);
+  }
+  .not-found h1 {
+    max-inline-size: 16ch;
+  }
+  .not-found .lead {
+    margin-top: var(--space-5);
+    max-inline-size: 36rem;
+  }
+  .not-found .btn-row {
+    margin-top: var(--space-6);
+  }
+  .not-found nav {
+    padding: var(--space-5);
+    background: var(--surface-alt);
+    border-top: 4px solid var(--color-green);
+    align-self: start;
+  }
+  .not-found nav h2 {
+    font-size: var(--fs-h4);
+    margin-bottom: var(--space-3);
+  }
+  .not-found nav li a {
+    min-block-size: 2.5rem;
+  }
+  @media (min-width: 64em) {
+    .not-found__inner {
+      grid-template-columns: 7fr 4fr;
+    }
+  }
+</style>

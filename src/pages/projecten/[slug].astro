@@ -1,0 +1,207 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Media from '../../components/Media.astro';
+import Icon from '../../components/Icon.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { getEntries, render } from 'astro:content';
+import { getProjects, serviceHref } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const d = project.data;
+const { Content } = await render(project);
+const services = await getEntries(d.services);
+const [cover, ...rest] = d.images;
+---
+
+<BaseLayout title={d.title} description={d.summary} index={!d.demo} ogType="article">
+  <article>
+    <header class="project-head">
+      <div class="container">
+        <Breadcrumbs items={[{ label: 'Projecten', href: '/projecten/' }, { label: d.title }]} />
+        {
+          d.demo && (
+            <p class="demo-note" role="note">
+              <span class="demo-badge">Demo</span> Dit is voorbeeldinhoud, geen echt project. Wordt niet gepubliceerd.
+            </p>
+          )
+        }
+        <p class="eyebrow">{d.projectType}</p>
+        <h1>{d.title}</h1>
+        <p class="lead">{d.summary}</p>
+      </div>
+    </header>
+
+    {
+      cover && (
+        <div class="container project-cover">
+          <Media file={cover.file} alt={cover.alt} ratio="16/9" eager sizes="(min-width: 76rem) 1200px, 100vw" />
+        </div>
+      )
+    }
+
+    <section class="section">
+      <div class="container project-body">
+        <div class="prose">
+          <h2>De opdracht</h2>
+          <Content />
+        </div>
+        <aside class="project-facts" aria-label="Projectgegevens">
+          <dl>
+            <div>
+              <dt>Type project</dt>
+              <dd>{d.projectType}</dd>
+            </div>
+            {
+              d.region && (
+                <div>
+                  <dt>Regio</dt>
+                  <dd>{d.region}</dd>
+                </div>
+              )
+            }
+            <div>
+              <dt>Diensten</dt>
+              <dd>
+                <ul role="list">
+                  {services.map((s) => (
+                    <li>
+                      <a href={serviceHref(s)}>{s.data.title}</a>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+          </dl>
+          {
+            d.tasks.length > 0 && (
+              <>
+                <h2>Uitgevoerde werkzaamheden</h2>
+                <ul class="check-list" role="list">
+                  {d.tasks.map((t) => (
+                    <li>{t}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+        </aside>
+      </div>
+    </section>
+
+    {
+      rest.length > 0 && (
+        <section class="section section--alt" aria-labelledby="fotos-title">
+          <div class="container">
+            <h2 id="fotos-title" class="gallery-title">
+              Foto's
+            </h2>
+            <ul class="gallery" role="list">
+              {rest.map((img) => (
+                <li>
+                  <Media file={img.file} alt={img.alt} ratio="4/3" sizes="(min-width: 64em) 580px, 100vw" />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )
+    }
+  </article>
+
+  <div class="container back">
+    <a href="/projecten/" class="link-arrow">Terug naar alle projecten <Icon name="arrow" /></a>
+  </div>
+
+  <CtaBand title="Zelf plannen?" />
+</BaseLayout>
+
+<style>
+  .project-head {
+    padding-block: var(--space-6) var(--space-7);
+    background: var(--surface-alt);
+  }
+  .project-head :global(.breadcrumbs) {
+    margin-bottom: var(--space-6);
+  }
+  .project-head h1 {
+    max-inline-size: 20ch;
+  }
+  .project-head .lead {
+    margin-top: var(--space-4);
+    max-inline-size: 42rem;
+  }
+  .demo-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-5);
+    font-size: var(--fs-sm);
+  }
+  .project-cover {
+    margin-top: calc(var(--space-7) * -0.01);
+    padding-top: var(--space-6);
+  }
+  .project-body {
+    display: grid;
+    gap: var(--space-7);
+  }
+  .project-body .prose h2,
+  .project-facts h2 {
+    font-size: var(--fs-h3);
+    margin-top: 0;
+  }
+  .project-facts {
+    padding: var(--space-5);
+    border: var(--rule);
+    border-top: 4px solid var(--color-blue);
+    align-self: start;
+  }
+  .project-facts dl {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+  }
+  .project-facts dt {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .project-facts dd {
+    font-weight: var(--fw-medium);
+  }
+  .project-facts h2 {
+    font-size: var(--fs-h4);
+    margin-bottom: var(--space-4);
+  }
+  @media (min-width: 64em) {
+    .project-body {
+      grid-template-columns: 7fr 4fr;
+      gap: var(--space-9);
+    }
+  }
+  .gallery-title {
+    font-size: var(--fs-h3);
+    margin-bottom: var(--space-5);
+  }
+  .gallery {
+    display: grid;
+    gap: var(--space-4);
+  }
+  @media (min-width: 40em) {
+    .gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .back {
+    padding-block: var(--space-7);
+  }
+</style>

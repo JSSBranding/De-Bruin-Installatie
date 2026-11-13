@@ -1,0 +1,52 @@
+---
+/**
+ * Bedrijfslogo. Bron: src/assets/brand/logo-de-bruin-installatie.png
+ * (geëxporteerd uit pbx_De_bruin_def.ai, niet herkleurd of vervormd).
+ * Ontbreekt het bestand, dan wordt de bedrijfsnaam als tekst getoond.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { company } from '../config/site';
+
+interface Props {
+  width?: number;
+  class?: string;
+  eager?: boolean;
+}
+const { width = 200, class: className, eager = false } = Astro.props;
+
+const brand = import.meta.glob<{ default: ImageMetadata }>('/src/assets/brand/logo-de-bruin-installatie.{png,svg,webp}', {
+  eager: true,
+});
+const logo = Object.values(brand)[0]?.default;
+---
+
+{
+  logo ? (
+    <Image
+      src={logo}
+      alt={company.name}
+      width={width}
+      densities={[1, 2]}
+      format="webp"
+      class:list={['logo', className]}
+      loading={eager ? 'eager' : 'lazy'}
+    />
+  ) : (
+    <span class:list={['logo-text', className]}>{company.name}</span>
+  )
+}
+
+<style>
+  .logo {
+    inline-size: auto;
+    block-size: auto;
+    max-inline-size: 100%;
+  }
+  .logo-text {
+    font-weight: var(--fw-bold);
+    font-size: 1.25rem;
+    color: var(--color-blue);
+    letter-spacing: -0.01em;
+  }
+</style>

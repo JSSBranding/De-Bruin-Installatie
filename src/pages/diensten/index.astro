@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceGrid from '../../components/ServiceGrid.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+---
+
+<BaseLayout
+  title="Diensten: badkamers, verwarming, warmtepompen en meer"
+  description="Bekijk de diensten van De Bruin Installatie uit Sint-Oedenrode: badkamers, cv-installaties, warmtepompen, ventilatie, loodgieterswerk en onderhoud."
+>
+  <PageHero
+    title="Onze diensten"
+    eyebrow="Wat we doen"
+    intro="De Bruin Installatie is een allround installatiebedrijf voor werk in en rondom je woning. Bij nieuwbouw, bij renovatie en voor het onderhoud van bestaande installaties."
+    breadcrumbs={[{ label: 'Diensten' }]}
+  />
+
+  <section class="section" aria-label="Overzicht van diensten">
+    <div class="container">
+      <ServiceGrid headingLevel="h2" />
+    </div>
+  </section>
+
+  <section class="section section--alt combo" aria-labelledby="combi-title">
+    <div class="container combo__inner">
+      <div>
+        <p class="eyebrow">Alles in één hand</p>
+        <h2 id="combi-title">Meerdere installaties tegelijk aanpakken?</h2>
+      </div>
+      <div class="combo__text">
+        <p>
+          Verbouwen of verduurzamen raakt vaak meerdere installaties tegelijk: de badkamer, het leidingwerk, de
+          verwarming en de ventilatie. Omdat we dat allemaal doen, stemmen we het werk op elkaar af en heb je één
+          aanspreekpunt.
+        </p>
+        <p>
+          Twijfel je bij welke dienst je vraag hoort? Beschrijf gewoon je situatie, dan denken we met je mee.
+        </p>
+        <a href="/contact/" class="link-arrow">Leg je vraag aan ons voor <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .combo {
+    padding-top: var(--section-y);
+  }
+  .combo__inner {
+    display: grid;
+    gap: var(--space-5) var(--space-8);
+  }
+  .combo__text > * + * {
+    margin-top: var(--space-4);
+  }
+  @media (min-width: 64em) {
+    .combo__inner {
+      grid-template-columns: 5fr 7fr;
+    }
+  }
+</style>

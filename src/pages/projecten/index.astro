@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Icon from '../../components/Icon.astro';
+import { getProjects } from '../../lib/content';
+
+const projects = await getProjects();
+const hasDemo = projects.some((p) => p.data.demo);
+---
+
+<BaseLayout
+  title="Projecten"
+  description="Bekijk projecten van De Bruin Installatie uit Sint-Oedenrode: badkamers, verwarming, warmtepompen, ventilatie en leidingwerk."
+  index={projects.length > 0}
+>
+  <PageHero
+    title="Projecten"
+    eyebrow="Ons werk"
+    intro="Een selectie van uitgevoerd werk. Per project lees je wat de vraag was en welke werkzaamheden we hebben uitgevoerd."
+    breadcrumbs={[{ label: 'Projecten' }]}
+  />
+
+  <section class="section">
+    <div class="container">
+      {
+        hasDemo && (
+          <p class="demo-note" role="note">
+            <span class="demo-badge">Demo</span> De projecten hieronder zijn voorbeeldinhoud om het template te
+            beoordelen. Ze worden niet gepubliceerd in de live-versie.
+          </p>
+        )
+      }
+      {
+        projects.length > 0 ? (
+          <ul class="project-grid" role="list">
+            {projects.map((p) => (
+              <li>
+                <ProjectCard project={p} headingLevel="h2" />
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div class="empty">
+            <h2>Binnenkort meer</h2>
+            <p>
+              We verzamelen op dit moment foto's en verhalen van uitgevoerde projecten. Wil je weten wat we voor jou kunnen
+              doen? Bekijk onze diensten of neem contact op.
+            </p>
+            <div class="btn-row">
+              <a href="/diensten/" class="btn btn--secondary">
+                Bekijk onze diensten
+              </a>
+              <a href="/contact/" class="btn">
+                Bespreek je plannen <Icon name="arrow" class="icon--arrow" />
+              </a>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .demo-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    margin-bottom: var(--space-6);
+    padding: var(--space-4);
+    background: var(--surface-alt);
+    font-size: var(--fs-sm);
+  }
+  .project-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .project-grid > li {
+    display: flex;
+  }
+  .project-grid > li > :global(*) {
+    flex: 1;
+  }
+  @media (min-width: 40em) {
+    .project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .project-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .empty {
+    max-inline-size: 40rem;
+  }
+  .empty > * + * {
+    margin-top: var(--space-4);
+  }
+  .empty .btn-row {
+    margin-top: var(--space-6);
+  }
+</style>

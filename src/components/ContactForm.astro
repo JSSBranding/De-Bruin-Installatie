@@ -1,0 +1,391 @@
+---
+/**
+ * Contactformulier.
+ * - Verstuurt naar PUBLIC_FORM_ENDPOINT (bijv. Formspree). Geen geheime sleutels in de browser.
+ * - Toont ALLEEN een succesmelding als het endpoint de aanvraag accepteert (HTTP 2xx).
+ * - Zonder endpoint: duidelijke melding, er wordt niets verstuurd.
+ */
+import Icon from './Icon.astro';
+import { company, formEndpoint, isProduction, requestTypes, type RequestType } from '../config/site';
+
+interface Props {
+  preselect?: RequestType;
+  id?: string;
+  title?: string;
+}
+const { preselect, id = 'contactformulier', title = 'Stuur ons een bericht' } = Astro.props;
+const f = (name: string) => `${id}-${name}`;
+const disabled = !formEndpoint && isProduction;
+---
+
+<div class="contact-form" id={id} data-contact-form-wrap>
+  <form
+    class="contact-form__form"
+    action={formEndpoint ?? undefined}
+    method="post"
+    data-contact-form
+    data-endpoint={formEndpoint ?? ''}
+    aria-labelledby={f('title')}
+  >
+    <h2 id={f('title')} class="contact-form__title">{title}</h2>
+    <p class="contact-form__intro">
+      Velden met <span aria-hidden="true">*</span><span class="visually-hidden">een sterretje</span> zijn verplicht. We
+      gebruiken je gegevens alleen om op je vraag te reageren.
+    </p>
+
+    {
+      !formEndpoint && (
+        <div class="form-notice" role="note">
+          {isProduction ? (
+            <p>
+              Het formulier is op dit moment niet beschikbaar.
+              {company.email && (
+                <>
+                  {' '}
+                  Mail ons via <a href={`mailto:${company.email}`}>{company.email}</a>
+                </>
+              )}
+              {company.phone && (
+                <>
+                  {' '}
+                  of bel <a href={company.phone.href}>{company.phone.display}</a>
+                </>
+              )}
+              .
+            </p>
+          ) : (
+            <p>
+              <strong>Ontwikkelversie:</strong> verzending is nog niet gekoppeld. Het formulier valideert wel, maar
+              verstuurt niets. Stel <code>PUBLIC_FORM_ENDPOINT</code> in (zie README).
+            </p>
+          )}
+        </div>
+      )
+    }
+
+    <div class="form-summary" data-error-summary tabindex="-1" hidden>
+      <h3>Controleer de volgende velden</h3>
+      <ul role="list" data-error-list></ul>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for={f('naam')}>Naam <span aria-hidden="true">*</span></label>
+        <input
+          id={f('naam')}
+          name="naam"
+          type="text"
+          autocomplete="name"
+          required
+          maxlength="100"
+          aria-describedby={f('naam-error')}
+          data-error-required="Vul je naam in."
+        />
+        <p class="field__error" id={f('naam-error')} data-error-for="naam"></p>
+      </div>
+
+      <div class="field">
+        <label for={f('email')}>E-mailadres <span aria-hidden="true">*</span></label>
+        <input
+          id={f('email')}
+          name="email"
+          type="email"
+          autocomplete="email"
+          inputmode="email"
+          required
+          maxlength="150"
+          aria-describedby={f('email-error')}
+          data-error-required="Vul je e-mailadres in."
+          data-error-invalid="Vul een geldig e-mailadres in, bijvoorbeeld naam@voorbeeld.nl."
+        />
+        <p class="field__error" id={f('email-error')} data-error-for="email"></p>
+      </div>
+
+      <div class="field">
+        <label for={f('telefoon')}>Telefoonnummer <span class="field__optional">(optioneel)</span></label>
+        <input
+          id={f('telefoon')}
+          name="telefoon"
+          type="tel"
+          autocomplete="tel"
+          inputmode="tel"
+          maxlength="20"
+          aria-describedby={`${f('telefoon-hint')} ${f('telefoon-error')}`}
+          data-error-invalid="Vul een geldig telefoonnummer in, of laat dit veld leeg."
+        />
+        <p class="field__hint" id={f('telefoon-hint')}>Handig als je liever wordt teruggebeld.</p>
+        <p class="field__error" id={f('telefoon-error')} data-error-for="telefoon"></p>
+      </div>
+
+      <div class="field">
+        <label for={f('type')}>Type aanvraag <span aria-hidden="true">*</span></label>
+        <div class="select">
+          <select
+            id={f('type')}
+            name="type_aanvraag"
+            required
+            aria-describedby={f('type-error')}
+            data-error-required="Kies waar je aanvraag over gaat."
+            data-preselect-from-url
+          >
+            <option value="" selected={!preselect}>Maak een keuze</option>
+            {
+              requestTypes.map((t) => (
+                <option value={t.value} selected={preselect === t.value}>
+                  {t.label}
+                </option>
+              ))
+            }
+          </select>
+        </div>
+        <p class="field__error" id={f('type-error')} data-error-for="type_aanvraag"></p>
+      </div>
+
+      <div class="field field--full">
+        <label for={f('bericht')}>Bericht <span aria-hidden="true">*</span></label>
+        <textarea
+          id={f('bericht')}
+          name="bericht"
+          rows="6"
+          required
+          minlength="10"
+          maxlength="3000"
+          aria-describedby={`${f('bericht-hint')} ${f('bericht-error')}`}
+          data-error-required="Vertel kort waar we je mee kunnen helpen."
+          data-error-short="Je bericht is wat kort. Vertel iets meer over je vraag (minimaal 10 tekens)."></textarea>
+        <p class="field__hint" id={f('bericht-hint')}>
+          Bijvoorbeeld: om welke ruimte of installatie het gaat en wanneer je het wilt laten uitvoeren.
+        </p>
+        <p class="field__error" id={f('bericht-error')} data-error-for="bericht"></p>
+      </div>
+
+      <!-- Spamfilter: dit veld moet leeg blijven -->
+      <div class="field--trap" aria-hidden="true">
+        <label for={f('website')}>Laat dit veld leeg</label>
+        <input id={f('website')} name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+    </div>
+
+    <div class="contact-form__footer">
+      <button type="submit" class="btn" data-submit disabled={disabled}>
+        <span data-submit-label>Verstuur je aanvraag</span>
+        <Icon name="arrow" class="icon--arrow" />
+      </button>
+      <p class="contact-form__privacy">
+        Lees in onze <a href="/privacy/">privacyverklaring</a> hoe we met je gegevens omgaan.
+      </p>
+    </div>
+
+    <div class="form-status" data-status role="alert" hidden></div>
+  </form>
+
+  <div class="form-success" data-success tabindex="-1" hidden>
+    <span class="form-success__icon"><Icon name="check" /></span>
+    <h2>Bedankt, je aanvraag is verstuurd</h2>
+    <p>We hebben je bericht ontvangen en nemen zo snel mogelijk contact met je op.</p>
+  </div>
+</div>
+
+<script>
+  import { initContactForms } from '../scripts/contact-form';
+  initContactForms();
+</script>
+
+<style>
+  .contact-form {
+    background: var(--color-white);
+    border: var(--rule);
+    border-top: 4px solid var(--color-blue);
+    padding: clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
+  }
+  .contact-form__title {
+    font-size: var(--fs-h3);
+  }
+  .contact-form__intro {
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-5);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+  }
+  .form-grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  @media (min-width: 40em) {
+    .form-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .field--full {
+      grid-column: 1 / -1;
+    }
+  }
+  .field {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+  .field label {
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-sm);
+  }
+  .field__optional {
+    font-weight: var(--fw-regular);
+    color: var(--text-muted);
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    inline-size: 100%;
+    min-block-size: 3rem;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid #8f9093;
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+    font-size: var(--fs-base);
+    line-height: 1.4;
+    transition: border-color var(--dur) var(--ease);
+  }
+  .field textarea {
+    resize: vertical;
+    min-block-size: 9rem;
+  }
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover {
+    border-color: var(--color-ink);
+  }
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .field textarea:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 0;
+    border-color: var(--color-blue);
+  }
+  .field [aria-invalid='true'] {
+    border-color: var(--color-error);
+    border-width: 2px;
+    background: var(--color-error-tint);
+  }
+  .select {
+    position: relative;
+  }
+  .select select {
+    appearance: none;
+    padding-right: 2.5rem;
+  }
+  .select::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    inline-size: 0.55rem;
+    block-size: 0.55rem;
+    border-right: 2px solid var(--color-ink);
+    border-bottom: 2px solid var(--color-ink);
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+  }
+  .field__hint {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+  .field__error {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-error);
+  }
+  .field__error:empty {
+    display: none;
+  }
+  .field--trap {
+    position: absolute;
+    left: -9999px;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+  }
+  .contact-form__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+  }
+  .contact-form__privacy {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+  .btn[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  .btn[aria-busy='true'] {
+    cursor: progress;
+  }
+  .form-notice {
+    margin-bottom: var(--space-5);
+    padding: var(--space-4);
+    border-left: 4px solid var(--color-lime);
+    background: var(--surface-alt);
+    font-size: var(--fs-sm);
+  }
+  .form-notice code {
+    font-size: 0.85em;
+    overflow-wrap: anywhere;
+  }
+  .form-summary {
+    margin-bottom: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border: 2px solid var(--color-error);
+    background: var(--color-error-tint);
+  }
+  .form-summary h3 {
+    font-size: var(--fs-base);
+    margin-bottom: var(--space-2);
+  }
+  .form-summary ul {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .form-summary a {
+    color: var(--color-error);
+    font-weight: var(--fw-medium);
+  }
+  .form-status {
+    margin-top: var(--space-5);
+    padding: var(--space-4);
+    border-left: 4px solid var(--color-error);
+    background: var(--color-error-tint);
+    font-size: var(--fs-sm);
+  }
+  .form-success {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-3);
+    padding-block: var(--space-6);
+  }
+  .form-success[hidden],
+  .form-summary[hidden],
+  .form-status[hidden] {
+    display: none;
+  }
+  .form-success__icon {
+    display: grid;
+    place-items: center;
+    inline-size: 3rem;
+    block-size: 3rem;
+    background: var(--color-green);
+    color: var(--color-ink);
+  }
+  .form-success__icon :global(.icon) {
+    inline-size: 1.6rem;
+    block-size: 1.6rem;
+    stroke-width: 2.5;
+  }
+  .form-success h2 {
+    font-size: var(--fs-h3);
+  }
+  .form-success:focus {
+    outline: none;
+  }
+</style>

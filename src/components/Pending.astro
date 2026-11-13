@@ -1,0 +1,42 @@
+---
+/**
+ * Markeert inhoud die nog moet worden aangeleverd of bevestigd.
+ * Alleen zichtbaar buiten productie; in productie wordt niets getoond.
+ */
+import { isProduction } from '../config/site';
+interface Props {
+  title?: string;
+}
+const { title = 'Nog aan te leveren' } = Astro.props;
+---
+
+{
+  !isProduction && (
+    <aside class="pending" aria-label={title}>
+      <strong>{title}</strong>
+      <div>
+        <slot />
+      </div>
+    </aside>
+  )
+}
+
+<style>
+  .pending {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4);
+    border: 1px dashed var(--color-grey);
+    border-left: 4px solid var(--color-lime);
+    background: var(--color-white);
+    font-size: var(--fs-sm);
+    color: var(--color-grey-ink);
+  }
+  .pending strong {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+</style>

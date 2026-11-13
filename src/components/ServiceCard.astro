@@ -1,0 +1,151 @@
+---
+import Media from './Media.astro';
+import Icon from './Icon.astro';
+import type { Service } from '../lib/content';
+import { serviceHref } from '../lib/content';
+import type { ImageKey } from '../config/images';
+
+interface Props {
+  service: Service;
+  index: number;
+  headingLevel?: 'h2' | 'h3';
+}
+const { service, index, headingLevel: H = 'h3' } = Astro.props;
+const d = service.data;
+const num = String(index + 1).padStart(2, '0');
+---
+
+<article class="service-card">
+  <Media
+    id={d.heroImage as ImageKey}
+    ratio="3/2"
+    sizes="(min-width: 64em) 380px, (min-width: 40em) 50vw, 100vw"
+    class="service-card__media"
+  />
+  <div class="service-card__body">
+    <div class="service-card__meta" aria-hidden="true">
+      <span class="service-card__icon"><Icon name={d.icon} /></span>
+      <span class="service-card__num">{num}</span>
+    </div>
+    <H class="service-card__title">
+      <a href={serviceHref(service)} class="service-card__link">{d.title}</a>
+    </H>
+    <p class="service-card__text">{d.summary}</p>
+    <span class="service-card__more" aria-hidden="true">
+      Meer over {d.shortTitle.toLowerCase()}
+      <Icon name="arrow" />
+    </span>
+  </div>
+</article>
+
+<style>
+  .service-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-white);
+    border: var(--rule);
+    border-radius: var(--radius-sm);
+    transition:
+      border-color var(--dur) var(--ease),
+      box-shadow var(--dur) var(--ease);
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset-inline: -1px;
+    top: -1px;
+    block-size: 4px;
+    background: var(--color-green);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur) var(--ease);
+  }
+  .service-card:hover,
+  .service-card:focus-within {
+    border-color: var(--color-blue);
+    box-shadow: var(--shadow-card);
+  }
+  .service-card:hover::before,
+  .service-card:focus-within::before {
+    transform: scaleX(1);
+  }
+  .service-card__body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--space-5);
+  }
+  .service-card__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+  }
+  .service-card__icon {
+    display: grid;
+    place-items: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    background: var(--color-blue-tint);
+    color: var(--color-blue);
+  }
+  .service-card__icon :global(.icon) {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+  }
+  .service-card__num {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.08em;
+    color: var(--color-grey-ink);
+  }
+  .service-card__title {
+    font-size: var(--fs-h4);
+    margin-bottom: var(--space-2);
+  }
+  .service-card__link {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  /* Hele kaart klikbaar */
+  .service-card__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+  }
+  .service-card__link:focus-visible {
+    outline: none;
+  }
+  .service-card:has(.service-card__link:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+  .service-card__text {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    margin-bottom: var(--space-5);
+  }
+  .service-card__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: auto;
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-sm);
+    color: var(--color-blue);
+  }
+  .service-card__more :global(.icon) {
+    inline-size: 1rem;
+    block-size: 1rem;
+    transition: transform var(--dur) var(--ease);
+  }
+  .service-card:hover .service-card__more :global(.icon) {
+    transform: translateX(3px);
+  }
+  .service-card:hover .service-card__link {
+    color: var(--color-blue);
+  }
+</style>

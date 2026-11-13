@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ContactForm from '../components/ContactForm.astro';
+import ContactDetails from '../components/ContactDetails.astro';
+import Pending from '../components/Pending.astro';
+import { company } from '../config/site';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Neem contact op met De Bruin Installatie in Sint-Oedenrode voor een vraag, advies of een offerte voor je badkamer, verwarming, warmtepomp of onderhoud."
+>
+  <PageHero
+    title="Bespreek je plannen"
+    eyebrow="Contact"
+    intro="Heb je een vraag, wil je advies of zoek je een installateur voor je project? Stuur ons een bericht of neem direct contact op. We denken graag met je mee."
+    breadcrumbs={[{ label: 'Contact' }]}
+  />
+
+  <section class="section contact">
+    <div class="container contact__inner">
+      <div class="contact__info">
+        <h2>Direct contact</h2>
+        <p class="muted">Liever even persoonlijk overleggen? Dat kan ook.</p>
+        <ContactDetails />
+
+        <div class="contact__next">
+          <h2>Wat gebeurt er na je bericht?</h2>
+          <ol class="steps" role="list">
+            <li><span>1</span>We lezen je vraag en nemen contact met je op.</li>
+            <li><span>2</span>We bespreken je wensen en, als dat nodig is, komen we bij je langs.</li>
+            <li><span>3</span>Je ontvangt een helder voorstel, zodat je weet waar je aan toe bent.</li>
+          </ol>
+        </div>
+
+        {
+          !company.serviceArea && (
+            <Pending title="Af te stemmen">Werkgebied, openingstijden en eventuele kaart worden toegevoegd na bevestiging.</Pending>
+          )
+        }
+      </div>
+      <ContactForm />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact__inner {
+    display: grid;
+    gap: var(--space-8);
+    align-items: start;
+  }
+  .contact__info h2 {
+    font-size: var(--fs-h3);
+  }
+  .contact__info > p {
+    margin-top: var(--space-2);
+  }
+  .contact__next {
+    margin-block: var(--space-7) var(--space-6);
+    padding-top: var(--space-6);
+    border-top: var(--rule);
+  }
+  .steps {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-5);
+  }
+  .steps li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: baseline;
+  }
+  .steps span {
+    flex: none;
+    display: grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    background: var(--color-green);
+    color: var(--color-ink);
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-sm);
+    transform: translateY(0.35rem);
+  }
+  @media (min-width: 64em) {
+    .contact__inner {
+      grid-template-columns: 4fr 7fr;
+      gap: var(--space-9);
+    }
+  }
+</style>

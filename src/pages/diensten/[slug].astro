@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ServiceDetail from '../../components/ServiceDetail.astro';
+import { getServices } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const services = await getServices();
+  // Diensten met een eigen canonieke pagina (onderhoud) krijgen hier geen dubbele route.
+  return services.filter((s) => !s.data.canonicalPath).map((service) => ({ params: { slug: service.id }, props: { service } }));
+}
+
+const { service } = Astro.props;
+---
+
+<BaseLayout title={service.data.metaTitle} description={service.data.metaDescription}>
+  <ServiceDetail service={service} breadcrumbs={[{ label: 'Diensten', href: '/diensten/' }, { label: service.data.title }]} />
+</BaseLayout>

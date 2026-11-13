@@ -1,0 +1,118 @@
+---
+import Icon from './Icon.astro';
+import { company } from '../config/site';
+
+interface Props {
+  heading?: string;
+}
+const { heading } = Astro.props;
+const a = company.address;
+---
+
+<div class="contact-details">
+  {heading && <h2 class="contact-details__title">{heading}</h2>}
+  <ul role="list">
+    {
+      company.phone && (
+        <li>
+          <span class="contact-details__icon">
+            <Icon name="phone" />
+          </span>
+          <span>
+            <span class="contact-details__label">Telefoon</span>
+            <a href={company.phone.href}>{company.phone.display}</a>
+          </span>
+        </li>
+      )
+    }
+    {
+      company.email && (
+        <li>
+          <span class="contact-details__icon">
+            <Icon name="mail" />
+          </span>
+          <span>
+            <span class="contact-details__label">E-mail</span>
+            <a href={`mailto:${company.email}`}>{company.email}</a>
+          </span>
+        </li>
+      )
+    }
+    <li>
+      <span class="contact-details__icon"><Icon name="pin" /></span>
+      <span>
+        <span class="contact-details__label">Vestigingsplaats</span>
+        {
+          company.showAddress ? (
+            <span>
+              {a.street}, {a.postalCode} {a.city}
+            </span>
+          ) : (
+            <span>{company.city}</span>
+          )
+        }
+      </span>
+    </li>
+    {
+      company.serviceArea && (
+        <li>
+          <span class="contact-details__icon">
+            <Icon name="pin" />
+          </span>
+          <span>
+            <span class="contact-details__label">Werkgebied</span>
+            <span>{company.serviceArea}</span>
+          </span>
+        </li>
+      )
+    }
+  </ul>
+</div>
+
+<style>
+  .contact-details {
+    margin-top: var(--space-6);
+  }
+  .contact-details__title {
+    font-size: var(--fs-h4);
+    margin-bottom: var(--space-4);
+  }
+  .contact-details ul {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .contact-details li {
+    display: flex;
+    gap: var(--space-4);
+    align-items: center;
+  }
+  .contact-details li > span:last-child {
+    display: grid;
+    min-inline-size: 0;
+  }
+  .contact-details__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    background: var(--color-blue);
+    color: var(--color-white);
+  }
+  .contact-details__icon :global(.icon) {
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+  }
+  .contact-details__label {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .contact-details a {
+    font-weight: var(--fw-medium);
+    font-size: 1.125rem;
+    overflow-wrap: anywhere;
+  }
+</style>

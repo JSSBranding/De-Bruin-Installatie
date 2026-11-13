@@ -1,0 +1,115 @@
+---
+import Media from './Media.astro';
+import Icon from './Icon.astro';
+import type { Project } from '../lib/content';
+import { projectHref } from '../lib/content';
+
+interface Props {
+  project: Project;
+  headingLevel?: 'h2' | 'h3';
+}
+const { project, headingLevel: H = 'h3' } = Astro.props;
+const d = project.data;
+const cover = d.images[0];
+---
+
+<article class="project-card">
+  <Media
+    file={cover?.file ?? ''}
+    alt={cover?.alt ?? ''}
+    ratio="4/3"
+    label={cover ? cover.alt : 'Projectfoto'}
+    sizes="(min-width: 64em) 380px, (min-width: 40em) 50vw, 100vw"
+  />
+  <div class="project-card__body">
+    <p class="project-card__type">
+      {d.demo && <span class="demo-badge">Demo</span>}
+      {d.projectType}{d.region && ` · ${d.region}`}
+    </p>
+    <H class="project-card__title">
+      <a href={projectHref(project)}>{d.title}</a>
+    </H>
+    <p class="project-card__text">{d.summary}</p>
+    <span class="project-card__more" aria-hidden="true">Bekijk project <Icon name="arrow" /></span>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-white);
+    border: var(--rule);
+    transition: border-color var(--dur) var(--ease);
+  }
+  .project-card:hover,
+  .project-card:focus-within {
+    border-color: var(--color-blue);
+  }
+  .project-card__body {
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .project-card__type {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-green-ink);
+    margin-bottom: var(--space-2);
+  }
+  .project-card__title {
+    font-size: var(--fs-h4);
+    margin-bottom: var(--space-2);
+  }
+  .project-card__title a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .project-card__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .project-card__title a:focus-visible {
+    outline: none;
+  }
+  .project-card:has(a:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+  .project-card__text {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--space-4);
+  }
+  .project-card__more {
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-sm);
+    color: var(--color-blue);
+  }
+  .project-card__more :global(.icon) {
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+  :global(.demo-badge) {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    background: var(--color-lime);
+    color: var(--color-ink);
+    font-size: 0.6875rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>
