@@ -1,6 +1,6 @@
 ---
 import { siteEnv, formEndpoint } from '../config/site';
-const envLabel = siteEnv === 'staging' ? 'Testomgeving' : 'Ontwikkelversie';
+const envLabel = { staging: 'Testomgeving', demo: 'Demoversie', development: 'Ontwikkelversie', production: '' }[siteEnv];
 ---
 
 <aside class="dev-notice" aria-label="Status van deze versie">

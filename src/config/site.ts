@@ -6,10 +6,10 @@
  * Zie docs/OPENSTAANDE-PUNTEN.md voor de status van elk gegeven.
  */
 
-export type SiteEnv = 'production' | 'staging' | 'development';
+export type SiteEnv = 'production' | 'staging' | 'demo' | 'development';
 
 const rawEnv = (import.meta.env.PUBLIC_SITE_ENV ?? 'development') as string;
-export const siteEnv: SiteEnv = (['production', 'staging', 'development'] as const).includes(rawEnv as SiteEnv)
+export const siteEnv: SiteEnv = (['production', 'staging', 'demo', 'development'] as const).includes(rawEnv as SiteEnv)
   ? (rawEnv as SiteEnv)
   : 'development';
 

@@ -6,7 +6,7 @@
  * - Zonder endpoint: duidelijke melding, er wordt niets verstuurd.
  */
 import Icon from './Icon.astro';
-import { company, formEndpoint, isProduction, requestTypes, type RequestType } from '../config/site';
+import { company, formEndpoint, isProduction, requestTypes, siteEnv, type RequestType } from '../config/site';
 
 interface Props {
   preselect?: RequestType;
@@ -55,7 +55,7 @@ const disabled = !formEndpoint && isProduction;
             </p>
           ) : (
             <p>
-              <strong>Ontwikkelversie:</strong> verzending is nog niet gekoppeld. Het formulier valideert wel, maar
+              <strong>{siteEnv === 'demo' ? 'Demoversie' : 'Ontwikkelversie'}:</strong> verzending is nog niet gekoppeld. Het formulier valideert wel, maar
               verstuurt niets. Stel <code>PUBLIC_FORM_ENDPOINT</code> in (zie README).
             </p>
           )}
