@@ -122,30 +122,26 @@ a:hover {
   color: var(--text-muted);
 }
 
-/* Label boven koppen: gespatieerd, met blauw vierkantje (uit de banner) */
+/* Label boven koppen: blauw met een groen lijntje ervoor */
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 0.6em;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   font-weight: var(--fw-medium);
-  letter-spacing: var(--tracking-label);
-  text-transform: uppercase;
-  color: var(--color-green-ink);
-  margin-bottom: var(--space-4);
+  color: var(--color-blue);
+  margin-bottom: var(--space-3);
 }
-.eyebrow::before {
+.eyebrow::before,
+.eyebrow--center::after {
   content: '';
-  inline-size: 0.6rem;
-  block-size: 0.6rem;
-  background: var(--color-blue);
+  inline-size: 1.75rem;
+  block-size: 2px;
+  background: var(--color-green);
   flex: none;
 }
 .eyebrow--light {
   color: var(--color-white);
-}
-.eyebrow--light::before {
-  background: var(--color-green);
 }
 
 /* Prose (markdown-inhoud) */
@@ -229,6 +225,14 @@ a:hover {
   margin-top: var(--space-4);
   color: var(--text-muted);
 }
+.section-head--center {
+  margin-inline: auto;
+  text-align: center;
+}
+.section-head--center p:not(.eyebrow) {
+  max-inline-size: 36rem;
+  margin-inline: auto;
+}
 .section-head--row {
   max-inline-size: none;
   display: flex;
@@ -283,8 +287,12 @@ a:hover {
 .btn:hover .icon--arrow {
   transform: translateX(3px);
 }
+.btn--lg {
+  min-block-size: 3.5rem;
+  padding-inline: 1.75rem;
+}
 .btn--secondary {
-  --btn-bg: transparent;
+  --btn-bg: var(--color-white);
   --btn-fg: var(--color-blue);
   --btn-border: var(--color-blue);
 }

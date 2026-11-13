@@ -55,6 +55,8 @@
   /* Merkkleuren */
   --color-blue: #005da7;
   --color-blue-dark: #00487f;
+  --color-navy: #0c2a47;
+  --color-blue-mist: #f2f6fb;
   --color-blue-tint: #e8f0f8;
   --color-blue-soft: #c9ddf0;
   --color-green: #97be0c;
@@ -74,7 +76,7 @@
   --text: var(--color-ink);
   --text-muted: var(--color-grey-ink);
   --surface: var(--color-white);
-  --surface-alt: var(--color-grey-lighter);
+  --surface-alt: var(--color-blue-mist);
   --border: #d6d6d8;
   --focus: var(--color-blue);
   --link: var(--color-blue);
@@ -118,13 +120,15 @@
   --container-narrow: 46rem;
   --header-h: 4.5rem;
 
-  /* Afronding: bewust strak */
-  --radius-sm: 2px;
-  --radius-md: 4px;
+  /* Afronding */
+  --radius-sm: 6px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --media-radius: var(--radius-md);
 
   /* Lijnen & schaduw */
   --rule: 1px solid var(--border);
-  --shadow-card: 0 1px 2px rgb(25 23 27 / 0.06), 0 8px 24px -12px rgb(25 23 27 / 0.18);
+  --shadow-card: 0 1px 2px rgb(12 42 71 / 0.05), 0 18px 40px -22px rgb(12 42 71 / 0.28);
 
   /* Beweging */
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);

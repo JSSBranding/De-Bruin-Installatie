@@ -8,20 +8,13 @@ interface Props {
 }
 const { headingLevel = 'h3', exclude } = Astro.props;
 const services = (await getServices()).filter((s) => s.id !== exclude);
-// Afwisseling: eerste dienst groot, laatste breed, de rest compact.
-const variantFor = (i: number) => (i === 0 ? 'feature' : i === services.length - 1 ? 'wide' : 'compact');
 ---
 
 <ul class="service-grid" role="list">
   {
-    services.map((service, i) => (
-      <li class={`service-grid__item service-grid__item--${variantFor(i)}`}>
-        <ServiceCard
-          service={service}
-          index={service.data.order - 1}
-          headingLevel={headingLevel}
-          variant={variantFor(i)}
-        />
+    services.map((service) => (
+      <li>
+        <ServiceCard service={service} headingLevel={headingLevel} />
       </li>
     ))
   }
@@ -42,18 +35,11 @@ const variantFor = (i: number) => (i === 0 ? 'feature' : i === services.length -
     .service-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .service-grid__item--feature,
-    .service-grid__item--wide {
-      grid-column: 1 / -1;
-    }
   }
   @media (min-width: 64em) {
     .service-grid {
-      grid-template-columns: 1.3fr 1fr 1fr;
-    }
-    .service-grid__item--feature {
-      grid-column: 1;
-      grid-row: span 2;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-6);
     }
   }
 </style>

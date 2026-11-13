@@ -1,0 +1,122 @@
+---
+/**
+ * Foto's van uitgevoerd werk, filterbaar per soort. Zonder JavaScript is alles zichtbaar.
+ */
+import Media from './Media.astro';
+import { images, type ImageKey } from '../config/images';
+
+const filters = [
+  { value: 'alles', label: 'Alles' },
+  { value: 'badkamer', label: 'Badkamers' },
+  { value: 'verwarming', label: 'Verwarming' },
+  { value: 'warmtepomp', label: 'Warmtepompen' },
+] as const;
+
+const items: { id: ImageKey; cat: (typeof filters)[number]['value'] }[] = [
+  { id: 'badkamers.hero', cat: 'badkamer' },
+  { id: 'warmtepompen.1', cat: 'warmtepomp' },
+  { id: 'verwarming.hero', cat: 'verwarming' },
+  { id: 'badkamers.1', cat: 'badkamer' },
+  { id: 'warmtepompen.hero', cat: 'warmtepomp' },
+  { id: 'badkamers.2', cat: 'badkamer' },
+  { id: 'warmtepompen.2', cat: 'warmtepomp' },
+  { id: 'badkamers.3', cat: 'badkamer' },
+  { id: 'warmtepompen.3', cat: 'warmtepomp' },
+];
+---
+
+<div class="work" data-work>
+  <div class="work__filters" role="group" aria-label="Filter op soort werk" data-work-filters hidden>
+    {
+      filters.map((f, i) => (
+        <button type="button" class="work__filter" data-filter={f.value} aria-pressed={i === 0 ? 'true' : 'false'}>
+          {f.label}
+        </button>
+      ))
+    }
+  </div>
+  <ul class="work__grid" role="list" aria-live="polite">
+    {
+      items.map((item) => (
+        <li data-cat={item.cat}>
+          <figure>
+            <Media id={item.id} ratio="4/3" sizes="(min-width: 64em) 380px, (min-width: 40em) 50vw, 100vw" class="work__media" />
+            <figcaption>{images[item.id].alt}</figcaption>
+          </figure>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-work]').forEach((root) => {
+    const bar = root.querySelector<HTMLElement>('[data-work-filters]');
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const items = [...root.querySelectorAll<HTMLElement>('[data-cat]')];
+    if (!bar) return;
+    bar.hidden = false;
+    buttons.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        const f = btn.dataset.filter;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+        items.forEach((li) => (li.hidden = f !== 'alles' && li.dataset.cat !== f));
+      }),
+    );
+  });
+</script>
+
+<style>
+  .work__filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-7);
+  }
+  .work__filters[hidden] {
+    display: none;
+  }
+  .work__filter {
+    min-block-size: 2.75rem;
+    padding: 0.5rem 1.25rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    font-weight: var(--fw-medium);
+    color: var(--color-ink);
+    transition: background-color var(--dur) var(--ease);
+  }
+  .work__filter:hover {
+    background: var(--color-blue-tint);
+  }
+  .work__filter[aria-pressed='true'] {
+    background: var(--color-blue);
+    color: var(--color-white);
+  }
+  .work__grid {
+    display: grid;
+    gap: var(--space-5);
+  }
+  .work__grid li[hidden] {
+    display: none;
+  }
+  .work__grid :global(.work__media) {
+    --media-radius: var(--radius-md);
+  }
+  .work__grid figcaption {
+    margin-top: var(--space-3);
+    font-weight: var(--fw-medium);
+  }
+  @media (min-width: 40em) {
+    .work__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .work__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-6);
+    }
+  }
+</style>

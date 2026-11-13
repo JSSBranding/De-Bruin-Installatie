@@ -1,0 +1,73 @@
+---
+import Icon from './Icon.astro';
+import { company } from '../config/site';
+---
+
+<aside class="top-bar on-dark" aria-label="Contactgegevens">
+  <div class="container top-bar__inner">
+    <ul role="list" class="top-bar__list">
+      <li><Icon name="pin" /><span>{company.city}</span></li>
+      {
+        company.email && (
+          <li class="top-bar__mail">
+            <Icon name="mail" />
+            <a href={`mailto:${company.email}`}>{company.email}</a>
+          </li>
+        )
+      }
+    </ul>
+    {
+      company.phone && (
+        <a href={company.phone.href} class="top-bar__phone">
+          <Icon name="phone" />
+          <span>Bel direct: {company.phone.display}</span>
+        </a>
+      )
+    }
+  </div>
+</aside>
+
+<style>
+  .top-bar {
+    background: var(--color-navy);
+    color: var(--color-blue-soft);
+    font-size: var(--fs-xs);
+  }
+  .top-bar__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    min-block-size: 2.5rem;
+  }
+  .top-bar__list {
+    display: flex;
+    gap: var(--space-6);
+  }
+  .top-bar li,
+  .top-bar__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .top-bar :global(.icon) {
+    inline-size: 0.95rem;
+    block-size: 0.95rem;
+    color: var(--color-green);
+  }
+  .top-bar a {
+    color: var(--color-white);
+    text-decoration: none;
+  }
+  .top-bar a:hover {
+    text-decoration: underline;
+  }
+  .top-bar__phone {
+    font-weight: var(--fw-medium);
+  }
+  @media (max-width: 39.99em) {
+    .top-bar__mail {
+      display: none;
+    }
+  }
+</style>

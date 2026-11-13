@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Header from '../components/Header.astro';
+import TopBar from '../components/TopBar.astro';
 import Footer from '../components/Footer.astro';
 import DevNotice from '../components/DevNotice.astro';
 import { company, isProduction } from '../config/site';
@@ -79,6 +80,7 @@ const jsonLd = {
   <body>
     <a class="skip-link" href="#inhoud">Direct naar de inhoud</a>
     {!isProduction && <DevNotice />}
+    <TopBar />
     <Header hasProjects={hasProjects} />
     <main id="inhoud" tabindex="-1">
       <slot />
