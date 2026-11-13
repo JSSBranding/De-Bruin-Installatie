@@ -1,0 +1,53 @@
+---
+/**
+ * Fotostrook met een groot en twee kleinere beelden, elk met een bijschrift.
+ */
+import Media from './Media.astro';
+import { images, type ImageKey } from '../config/images';
+
+interface Props {
+  items: { id: ImageKey; caption?: string }[];
+}
+const { items } = Astro.props;
+---
+
+<div class:list={['photo-strip', `photo-strip--${items.length}`]}>
+  {
+    items.map((item, i) => (
+      <figure class:list={['photo-strip__item', { 'photo-strip__item--lead': i === 0 }]}>
+        <Media
+          id={item.id}
+          ratio={i === 0 ? '4/3' : '3/2'}
+          sizes={i === 0 ? '(min-width: 64em) 700px, 100vw' : '(min-width: 64em) 460px, 50vw'}
+        />
+        <figcaption class="caption">{item.caption ?? images[item.id].alt}</figcaption>
+      </figure>
+    ))
+  }
+</div>
+
+<style>
+  .photo-strip {
+    display: grid;
+    gap: var(--space-5) var(--space-4);
+  }
+  @media (min-width: 40em) {
+    .photo-strip {
+      grid-template-columns: 1fr 1fr;
+    }
+    .photo-strip__item--lead {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 64em) {
+    .photo-strip--3 {
+      grid-template-columns: 7fr 5fr;
+      grid-template-rows: auto auto;
+      align-items: start;
+    }
+    .photo-strip--3 .photo-strip__item--lead {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+  }
+</style>

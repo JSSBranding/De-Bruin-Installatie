@@ -83,6 +83,7 @@ h4 {
 }
 h1 {
   font-size: var(--fs-h1);
+  hyphens: manual;
   line-height: var(--lh-tight);
   letter-spacing: -0.015em;
 }
@@ -319,25 +320,18 @@ a:hover {
   gap: var(--space-3);
 }
 
-/* Tekstlink met pijl */
+/* Tekstlink: gewoon onderstreept, zoals een link hoort */
 .link-arrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
   font-weight: var(--fw-medium);
-  text-decoration: none;
   color: var(--color-blue);
-}
-.link-arrow .icon {
-  inline-size: 1em;
-  block-size: 1em;
-  transition: transform var(--dur) var(--ease);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.25em;
+  text-decoration-color: var(--color-green);
 }
 .link-arrow:hover {
-  text-decoration: underline;
-}
-.link-arrow:hover .icon {
-  transform: translateX(3px);
+  color: var(--color-blue-dark);
+  text-decoration-color: currentColor;
 }
 
 /* ── Toegankelijkheid ──────────────────────────────────── */
@@ -385,4 +379,15 @@ a:hover {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Fotobijschrift: cursief, zoals de slogan in het logo */
+.caption {
+  margin-top: var(--space-2);
+  font-style: italic;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+.measure {
+  max-inline-size: 38rem;
 }

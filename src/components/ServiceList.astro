@@ -1,0 +1,134 @@
+---
+/**
+ * Dienstenoverzicht als lijst (geen kaarten): naam, korte omschrijving en een foto.
+ */
+import Media from './Media.astro';
+import { getServices, serviceHref } from '../lib/content';
+import type { ImageKey } from '../config/images';
+
+interface Props {
+  headingLevel?: 'h2' | 'h3';
+  /** Toon ook de eerste drie werkzaamheden per dienst */
+  detailed?: boolean;
+}
+const { headingLevel: H = 'h3', detailed = false } = Astro.props;
+const services = await getServices();
+---
+
+<ul class:list={['service-list', { 'service-list--detailed': detailed }]} role="list">
+  {
+    services.map((s) => (
+      <li class="service-row">
+        <div class="service-row__text">
+          <H class="service-row__title">
+            <a href={serviceHref(s)}>{s.data.title}</a>
+          </H>
+          <p>{s.data.summary}</p>
+          {detailed && (
+            <ul class="service-row__tasks" role="list">
+              {s.data.tasks.slice(0, 3).map((t) => (
+                <li>{t}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <Media
+          id={s.data.heroImage as ImageKey}
+          ratio="4/3"
+          sizes="(min-width: 64em) 220px, 30vw"
+          class="service-row__media"
+          compact
+        />
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .service-list {
+    border-top: 2px solid var(--color-ink);
+  }
+  .service-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 6.5rem;
+    gap: var(--space-4) var(--space-5);
+    align-items: center;
+    padding-block: var(--space-5);
+    border-bottom: var(--rule);
+  }
+  .service-row__title {
+    font-size: clamp(1.25rem, 1.1rem + 0.7vw, 1.75rem);
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.01em;
+  }
+  .service-row__title a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .service-row__title a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .service-row__title a:focus-visible {
+    outline: none;
+  }
+  .service-row:has(a:focus-visible) {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+  .service-row:hover .service-row__title a {
+    color: var(--color-blue);
+    text-decoration: underline;
+    text-decoration-color: var(--color-green);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+  }
+  .service-row__text p {
+    margin-top: var(--space-2);
+    color: var(--text-muted);
+    max-inline-size: 34rem;
+  }
+  .service-row__tasks {
+    margin-top: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    font-size: var(--fs-sm);
+  }
+  .service-row__tasks li::before {
+    content: '';
+    display: inline-block;
+    inline-size: 0.4rem;
+    block-size: 0.4rem;
+    margin-right: 0.5rem;
+    background: var(--color-green);
+    vertical-align: middle;
+  }
+  @media (min-width: 48em) {
+    .service-row {
+      grid-template-columns: minmax(0, 1fr) 13rem;
+      gap: var(--space-7);
+      padding-block: var(--space-6);
+    }
+  }
+  @media (min-width: 64em) {
+    .service-row {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) 13rem;
+    }
+    .service-row__text {
+      display: contents;
+    }
+    .service-row__text p {
+      margin-top: 0;
+    }
+    .service-list--detailed .service-row__text {
+      display: block;
+      grid-column: 1 / 3;
+    }
+    .service-list--detailed .service-row__text p {
+      margin-top: var(--space-2);
+    }
+  }
+</style>

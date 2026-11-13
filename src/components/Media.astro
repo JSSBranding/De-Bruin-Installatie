@@ -20,6 +20,8 @@ interface Props {
   sizes?: string;
   eager?: boolean;
   class?: string;
+  /** Kleine weergave: placeholder zonder tekst */
+  compact?: boolean;
 }
 
 const props = Astro.props;
@@ -49,13 +51,12 @@ if (src && widths.length === 0) widths.push(src.width);
         fetchpriority={props.eager ? 'high' : 'auto'}
         decoding="async"
       />
-    ) : isProduction ? (
+    ) : isProduction || props.compact ? (
       <div class="media__placeholder" aria-hidden="true" />
     ) : (
       <div class="media__placeholder" role="img" aria-label={`Plaats voor foto: ${label}`}>
         <span class="media__label">
-          <span class="media__tag">Foto volgt</span>
-          {label}
+          <span class="media__tag">Foto volgt: {label}</span>
           <code>{file}</code>
         </span>
       </div>
@@ -85,7 +86,7 @@ if (src && widths.length === 0) widths.push(src.width);
     display: flex;
     align-items: flex-end;
     padding: var(--space-4);
-    background-color: var(--color-grey-light);
+    background-color: #e4e7ea;
     /* Twee gekantelde tegels: verwijzing naar het beeldmerk */
     background-image:
       linear-gradient(transparent, transparent),
@@ -96,19 +97,15 @@ if (src && widths.length === 0) widths.push(src.width);
   }
   .media__label {
     display: grid;
-    gap: 0.15rem;
+    gap: 0.1rem;
     max-inline-size: 100%;
-    padding: 0.5rem 0.7rem;
-    background: rgb(255 255 255 / 0.92);
     font-size: var(--fs-xs);
     line-height: 1.35;
     color: var(--color-grey-ink);
   }
   .media__tag {
-    font-weight: var(--fw-medium);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
-    color: var(--color-blue);
+    font-style: italic;
+    font-size: var(--fs-sm);
   }
   .media__label code {
     font-family: inherit;

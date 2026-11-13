@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Media from '../../components/Media.astro';
-import Icon from '../../components/Icon.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { getEntries, render } from 'astro:content';
 import { getProjects, serviceHref } from '../../lib/content';
@@ -31,7 +30,6 @@ const [cover, ...rest] = d.images;
             </p>
           )
         }
-        <p class="eyebrow">{d.projectType}</p>
         <h1>{d.title}</h1>
         <p class="lead">{d.summary}</p>
       </div>
@@ -115,7 +113,7 @@ const [cover, ...rest] = d.images;
   </article>
 
   <div class="container back">
-    <a href="/projecten/" class="link-arrow">Terug naar alle projecten <Icon name="arrow" /></a>
+    <a href="/projecten/" class="link-arrow">Terug naar alle projecten</a>
   </div>
 
   <CtaBand title="Zelf plannen?" />
@@ -169,10 +167,7 @@ const [cover, ...rest] = d.images;
     margin-bottom: var(--space-6);
   }
   .project-facts dt {
-    font-size: var(--fs-xs);
-    font-weight: var(--fw-medium);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
+    font-size: var(--fs-sm);
     color: var(--text-muted);
   }
   .project-facts dd {

@@ -3,7 +3,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import CtaBand from '../../components/CtaBand.astro';
-import Icon from '../../components/Icon.astro';
 import { getProjects } from '../../lib/content';
 
 const projects = await getProjects();
@@ -17,7 +16,6 @@ const hasDemo = projects.some((p) => p.data.demo);
 >
   <PageHero
     title="Projecten"
-    eyebrow="Ons werk"
     intro="Een selectie van uitgevoerd werk. Per project lees je wat de vraag was en welke werkzaamheden we hebben uitgevoerd."
     breadcrumbs={[{ label: 'Projecten' }]}
   />
@@ -53,7 +51,7 @@ const hasDemo = projects.some((p) => p.data.demo);
                 Bekijk onze diensten
               </a>
               <a href="/contact/" class="btn">
-                Bespreek je plannen <Icon name="arrow" class="icon--arrow" />
+                Bespreek je plannen
               </a>
             </div>
           </div>
