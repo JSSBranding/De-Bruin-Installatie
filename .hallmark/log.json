@@ -1,0 +1,40 @@
+[
+ {
+  "mode": "redesign",
+  "depth": "full",
+  "scope": "site",
+  "shape": "kept",
+  "theme": "brand",
+  "axes": "light/grotesk-sans/cool",
+  "hero": "Stage",
+  "nav": "edge-aligned, kept",
+  "footer": "index columns, kept",
+  "imagery": "user photos",
+  "photos": [
+   "team-bij-bedrijfsbussen.jpg",
+   "badkamer-bad-tegelwand.jpg",
+   "woning-met-zonnepanelen.jpg"
+  ],
+  "entry": "none",
+  "sections": [
+   "Stage hero + steps",
+   "Split about",
+   "Grid services index",
+   "Band phone",
+   "Split work",
+   "Band close"
+  ],
+  "signature": "phone number at van-lettering scale in the blue band",
+  "waived": [
+   "42",
+   "44c",
+   "49b",
+   "77",
+   "78",
+   "79",
+   "81"
+  ],
+  "prompt": "local installer: bathrooms, heating, heat pumps; homeowners book an advice talk",
+  "date": "2026-11-13"
+ }
+]

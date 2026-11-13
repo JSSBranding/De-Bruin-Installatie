@@ -13,7 +13,6 @@ import { company } from '../config/site';
 >
   <PageHero
     title="Bespreek je plannen"
-    eyebrow="Contact"
     intro="Heb je een vraag, wil je advies of zoek je een installateur voor je project? Stuur ons een bericht of neem direct contact op. We denken graag met je mee."
     breadcrumbs={[{ label: 'Contact' }]}
   />
@@ -74,15 +73,12 @@ import { company } from '../config/site';
   }
   .steps span {
     flex: none;
-    display: grid;
-    place-items: center;
-    inline-size: 2rem;
-    block-size: 2rem;
-    background: var(--color-green);
-    color: var(--color-ink);
+    min-inline-size: 1.25rem;
+    color: var(--color-accent);
     font-weight: var(--fw-bold);
-    font-size: var(--fs-sm);
-    transform: translateY(0.35rem);
+    font-size: var(--text-title);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
   }
   @media (min-width: 64em) {
     .contact__inner {

@@ -150,6 +150,15 @@ export const images = {
     label: 'Leidingwerk',
   },
 
+  // ── Uitgevoerd werk ───────────────────────────────────────
+  'werk.zonnepanelen': {
+    file: 'zonnepanelen/woning-met-zonnepanelen.jpg',
+    alt: 'Woning met zonnepanelen op het dak',
+    ratio: '4/3',
+    focus: '50% 57%',
+    label: 'Woning met zonnepanelen',
+  },
+
   // ── Onderhoud en service ──────────────────────────────────
   'onderhoud.hero': {
     file: 'diensten/onderhoud-service.jpg',
@@ -164,11 +173,11 @@ export type ImageKey = keyof typeof images;
 /**
  * Aangeleverde foto's die nog NIET op de site staan, omdat de bijbehorende
  * dienst (zonnepanelen) nog niet bevestigd is. Alleen ter administratie.
+ * De foto 'woning-met-zonnepanelen.jpg' staat wel bij 'Ons werk' op de homepage.
  */
 export const reservedImages = [
   'zonnepanelen/zonnepanelen-dak-close-up.jpg',
   'zonnepanelen/monteur-plaatst-zonnepanelen.jpg',
-  'zonnepanelen/woning-met-zonnepanelen.jpg',
   'zonnepanelen/omvormer.jpg',
 ];
 

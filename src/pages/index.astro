@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Media from '../components/Media.astro';
 import Icon from '../components/Icon.astro';
+import { images } from '../config/images';
 import ServiceGrid from '../components/ServiceGrid.astro';
 import WorkGallery from '../components/WorkGallery.astro';
 import ProjectCard from '../components/ProjectCard.astro';
@@ -13,17 +14,13 @@ import { getProjects } from '../lib/content';
 const projects = await getProjects();
 const featured = (projects.filter((p) => p.data.featured).length ? projects.filter((p) => p.data.featured) : projects).slice(0, 3);
 
-const steps = [
-  { icon: 'phone', title: 'Neem contact op' },
-  { icon: 'clipboard', title: 'Advies op maat' },
-  { icon: 'wrench', title: 'Vakkundig geïnstalleerd' },
-] as const;
+const steps = ['Neem contact op', 'Advies op maat', 'Vakkundig geïnstalleerd'] as const;
 
 const strengths = [
-  { icon: 'chat', title: 'Persoonlijk contact', text: 'met de vakman zelf' },
-  { icon: 'clipboard', title: 'Eerlijk advies', text: 'wat past bij jouw woning' },
-  { icon: 'pipe', title: 'Nieuwbouw en renovatie', text: 'van leiding tot badkamer' },
-  { icon: 'wrench', title: 'Onderhoud en service', text: 'ook na de oplevering' },
+  { title: 'Persoonlijk contact', text: 'met de vakman zelf' },
+  { title: 'Eerlijk advies', text: 'wat past bij jouw woning' },
+  { title: 'Nieuwbouw en renovatie', text: 'van leiding tot badkamer' },
+  { title: 'Onderhoud en service', text: 'ook na de oplevering' },
 ] as const;
 
 const scope = [
@@ -41,16 +38,12 @@ const scope = [
   description="De Bruin Installatie uit Sint-Oedenrode: badkamers, cv-installaties, warmtepompen, ventilatie, loodgieterswerk en onderhoud. Vakmanschap en persoonlijk advies."
 >
   <!-- Hero -->
-  <section class="hero">
+  <section class="hero" aria-labelledby="hero-title">
     <div class="container hero__inner">
       <div class="hero__text">
-        <p class="eyebrow">Installatiebedrijf in {company.city}</p>
-        <h1>
-          Vertrouwd in <span class="hero__accent">installatie&shy;techniek.</span>
-        </h1>
+        <h1 id="hero-title">Vertrouwd in installatie&shy;techniek.</h1>
         <p class="lead">
-          Van complete badkamers tot verwarmingsinstallaties en duurzame oplossingen. Vakmanschap, persoonlijk advies en
-          installatiewerk dat met zorg wordt uitgevoerd.
+          Installatiebedrijf uit {company.city} voor badkamers, verwarming en duurzame oplossingen.
         </p>
         <div class="btn-row">
           <a href={primaryCta.href} class="btn btn--lg">{primaryCta.label}</a>
@@ -58,37 +51,35 @@ const scope = [
         </div>
       </div>
       <div class="hero__media">
-        <Media id="home.hero" eager sizes="(min-width: 64em) 640px, 100vw" class="hero__photo" />
+        <Media id="home.hero" ratio="3/2" eager sizes="(min-width: 60rem) 56vw, 100vw" class="hero__photo" />
       </div>
     </div>
 
     <div class="hero__base">
-      <ol class="container hero__steps" role="list" aria-label="Zo werkt het">
+      <div class="container">
+      <ol class="hero__steps" role="list" aria-label="Zo werkt het">
         {
-          steps.map((step, i) => (
-            <li class:list={['hero-step', { 'hero-step--main': i === 1 }]}>
-              <span class="hero-step__icon" aria-hidden="true">
-                <Icon name={step.icon} />
-              </span>
-              <span class="hero-step__title">{step.title}</span>
+          steps.map((title, i) => (
+            <li class="hero-step">
+              <span class="hero-step__num" aria-hidden="true">{i + 1}</span>
+              <span class="hero-step__title">{title}</span>
             </li>
           ))
         }
       </ol>
+      </div>
     </div>
   </section>
 
   <!-- Over ons -->
-  <section class="section about" aria-labelledby="about-title">
+  <section class="about" aria-labelledby="about-title">
     <div class="container about__inner">
       <div class="about__media">
-        <Media id="home.intro" sizes="(min-width: 64em) 520px, 100vw" class="about__photo" />
+        <Media id="home.intro" sizes="(min-width: 60rem) 40vw, 100vw" class="about__photo" />
         {
           company.phone && (
             <a href={company.phone.href} class="about__call">
-              <span class="about__call-icon" aria-hidden="true">
-                <Icon name="phone" />
-              </span>
+              <Icon name="phone" />
               <span>
                 <span class="about__call-label">Bel direct</span>
                 <strong>{company.phone.display}</strong>
@@ -98,7 +89,6 @@ const scope = [
         }
       </div>
       <div class="about__text">
-        <p class="eyebrow">Over ons</p>
         <h2 id="about-title">Eén vakpartner voor installaties in en om je woning</h2>
         <p>
           Een nieuwe badkamer, een betrouwbare verwarming of je woning verduurzamen? <strong
@@ -110,71 +100,57 @@ const scope = [
           we traditioneel vakmanschap met moderne installatietechniek.
         </p>
         <ul class="about__scope" role="list">
-          {
-            scope.map((item) => (
-              <li>
-                <Icon name="check" />
-                {item}
-              </li>
-            ))
-          }
+          {scope.map((item) => <li>{item}</li>)}
         </ul>
-        <a href="/over-ons/" class="btn">Meer over ons</a>
+        <a href="/over-ons/" class="btn btn--secondary">Meer over ons</a>
       </div>
     </div>
   </section>
 
   <!-- Diensten -->
-  <section class="section section--alt" aria-labelledby="diensten-title">
+  <section class="section section--alt services" aria-labelledby="diensten-title">
     <div class="container">
-      <div class="section-head section-head--center">
-        <p class="eyebrow eyebrow--center">Diensten</p>
+      <div class="section-head section-head--split">
         <h2 id="diensten-title">Waarmee we je helpen</h2>
         <p>Van een nieuwe badkamer tot een warmtepomp: kies een onderwerp en lees wat we voor je kunnen doen.</p>
       </div>
-      <ServiceGrid />
+      <ServiceGrid variant="index" />
     </div>
   </section>
 
-  <!-- Sterke punten -->
+  <!-- Sterke punten: de blauwe band -->
   <section class="strengths on-dark" aria-labelledby="strengths-title">
     <div class="container strengths__inner">
-      <div class="strengths__text">
-        <h2 id="strengths-title">Vakwerk van een vast team uit {company.city}</h2>
-        {
-          company.phone && (
-            <a href={company.phone.href} class="strengths__call">
-              <span class="strengths__number">{company.phone.display}</span>
-              <span class="strengths__label">Bel ons gerust voor advies</span>
-            </a>
-          )
-        }
-      </div>
+      <h2 id="strengths-title">Vakwerk van een vast team uit {company.city}</h2>
       <ul class="strengths__list" role="list">
         {
           strengths.map((s) => (
             <li>
-              <Icon name={s.icon} />
-              <span>
-                <strong>{s.title}</strong>
-                {s.text}
-              </span>
+              <strong>{s.title}</strong>
+              <span>{s.text}</span>
             </li>
           ))
         }
       </ul>
+      {
+        company.phone && (
+          <a href={company.phone.href} class="strengths__call">
+            <span class="strengths__number">{company.phone.display}</span>
+            <span class="strengths__label">Bel ons gerust voor advies</span>
+          </a>
+        )
+      }
     </div>
   </section>
 
   <!-- Uit de praktijk -->
-  <section class="section" aria-labelledby="werk-title">
+  <section class="section work-section" aria-labelledby="werk-title">
     <div class="container">
-      <div class="section-head section-head--center">
-        <p class="eyebrow eyebrow--center">Uit de praktijk</p>
+      <div class="section-head section-head--split">
         <h2 id="werk-title">Ons werk</h2>
         <p>Een greep uit installaties die we hebben aangelegd.</p>
       </div>
-      <WorkGallery />
+      <WorkGallery exclude={[images['home.intro'].file, images['home.hero'].file]} />
     </div>
   </section>
 
@@ -183,12 +159,9 @@ const scope = [
       <section class="section section--alt" aria-labelledby="projecten-title">
         <div class="container">
           <div class="section-head section-head--row">
-            <div>
-              <p class="eyebrow">Projecten</p>
-              <h2 id="projecten-title">Uitgelicht werk</h2>
-            </div>
+            <h2 id="projecten-title">Uitgelicht werk</h2>
             <a href="/projecten/" class="link-arrow">
-              Alle projecten <Icon name="arrow" />
+              Alle projecten
             </a>
           </div>
           <ul class="project-grid" role="list">
@@ -209,383 +182,313 @@ const scope = [
 </BaseLayout>
 
 <style>
-  /* ── Hero ─────────────────────────────── */
+  /* ── Hero: tekst op vijf kolommen, de teamfoto op zes ── */
   .hero {
-    position: relative;
-    overflow: clip;
-    background: var(--surface-alt);
-    padding-top: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+    background: var(--color-paper);
   }
   .hero__inner {
     display: grid;
-    gap: var(--space-7);
+    gap: var(--space-xl);
     align-items: center;
+    padding-block: var(--space-xl) var(--space-2xl);
   }
   .hero h1 {
-    font-size: clamp(2.75rem, 1.6rem + 4.6vw, 5rem);
+    font-size: clamp(2.75rem, 3.6vw + 1rem, 5rem);
     line-height: 1.02;
     letter-spacing: -0.03em;
     max-inline-size: 11ch;
     hyphens: manual;
   }
-  .hero__accent {
-    color: var(--color-blue);
-  }
   .hero .lead {
-    margin-top: var(--space-5);
-    max-inline-size: 30rem;
-    color: var(--text-muted);
+    margin-top: var(--space-lg);
+    max-inline-size: 30ch;
   }
   .hero .btn-row {
-    margin-top: var(--space-6);
-  }
-  .hero__media {
-    position: relative;
-    isolation: isolate;
-  }
-  .hero__media::before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    inset: -8% -12% -8% 12%;
-    border-radius: 50%;
-    background: radial-gradient(closest-side, var(--color-blue-soft), transparent);
-    opacity: 0.7;
+    margin-top: var(--space-xl);
   }
   .hero__media :global(.hero__photo) {
     --media-radius: var(--radius-lg);
-    box-shadow: 0 40px 60px -40px rgb(12 42 71 / 0.55);
   }
 
-  /* Gebogen basis met de drie stappen */
+  /* De drie stappen langs de onderkant van het eerste scherm */
   .hero__base {
-    position: relative;
-    margin-top: var(--space-6);
-    padding-bottom: var(--space-7);
-  }
-  .hero__base::before {
-    content: '';
-    position: absolute;
-    inset: 3.5rem -20% 0;
-    background: var(--color-white);
-    border-top-left-radius: 50% 7rem;
-    border-top-right-radius: 50% 7rem;
+    background: var(--color-paper-2);
+    border-top: var(--rule);
   }
   .hero__steps {
-    position: relative;
     display: grid;
-    gap: var(--space-3);
+    counter-reset: none;
   }
   .hero-step {
     display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-3) var(--space-4);
-    border-radius: 999px;
-    background: var(--color-white);
-    box-shadow: var(--shadow-card);
-    font-weight: var(--fw-bold);
-    font-size: 1.125rem;
+    align-items: baseline;
+    gap: var(--space-md);
+    padding-block: var(--space-lg);
+    border-top: var(--rule);
   }
-  .hero-step__icon {
-    display: grid;
-    place-items: center;
+  .hero-step:first-child {
+    border-top: 0;
+  }
+  .hero-step__num {
     flex: none;
-    inline-size: 3rem;
-    block-size: 3rem;
-    border-radius: 50%;
-    background: var(--color-blue-tint);
-    color: var(--color-blue);
+    font-size: var(--text-title);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
   }
-  .hero-step__icon :global(.icon) {
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
-  }
-  .hero-step--main {
-    background: var(--color-blue);
-    color: var(--color-white);
-  }
-  .hero-step--main .hero-step__icon {
-    background: rgb(255 255 255 / 0.15);
-    color: var(--color-white);
+  .hero-step__title {
+    font-size: var(--fs-h4);
+    font-weight: var(--fw-medium);
+    line-height: 1.25;
   }
 
-  @media (min-width: 64em) {
+  @media (min-width: 60rem) {
     .hero__inner {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-      gap: var(--space-8);
-    }
-    .hero__inner {
-      padding-bottom: var(--space-6);
-    }
-    .hero__base {
-      margin-top: 0;
-      padding-bottom: var(--space-8);
-    }
-    .hero__base::before {
-      inset: 6rem -10% 0;
-      border-top-left-radius: 50% 9rem;
-      border-top-right-radius: 50% 9rem;
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: var(--space-2xl);
+      padding-block: var(--space-2xl);
     }
     .hero__steps {
-      grid-template-columns: repeat(3, auto);
-      justify-content: center;
-      align-items: center;
-      gap: var(--space-9);
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: var(--gap-columns);
     }
     .hero-step {
-      position: relative;
-      flex-direction: column;
-      justify-content: center;
-      inline-size: 11rem;
-      block-size: 11rem;
-      padding: var(--space-4);
-      border-radius: 50%;
-      text-align: center;
-      font-size: 1.0625rem;
-      line-height: 1.25;
+      border-top: 0;
+      padding-block: var(--space-xl);
     }
-    .hero-step__icon {
-      inline-size: 3.5rem;
-      block-size: 3.5rem;
-      background: transparent;
-    }
-    .hero-step__icon :global(.icon) {
-      inline-size: 2.5rem;
-      block-size: 2.5rem;
-      stroke-width: 1.5;
-    }
-    .hero-step--main {
-      inline-size: 13rem;
-      block-size: 13rem;
-      font-size: 1.1875rem;
-    }
-    .hero-step--main .hero-step__icon {
-      background: transparent;
-    }
-    /* Gebogen pijl tussen de stappen */
-    .hero-step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: calc(100% + (var(--space-9) - 3rem) / 2);
-      inline-size: 3rem;
-      block-size: 1.5rem;
-      transform: translateY(-50%);
-      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 24' fill='none' stroke='%23005da7' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 18c10-12 26-14 40-4'/%3E%3Cpath d='M34 8l9 6-8 6'/%3E%3C/svg%3E")
-        no-repeat center / contain;
+    .hero-step + .hero-step {
+      border-left: var(--rule);
+      padding-left: var(--gap-columns);
     }
   }
 
-  /* ── Over ons ─────────────────────────── */
+  /* ── Over ons: foto op vijf kolommen, tekst op zes ───── */
+  .about {
+    padding-block: var(--section-gap);
+  }
   .about__inner {
     display: grid;
-    gap: var(--space-8);
+    gap: var(--space-2xl);
     align-items: center;
   }
   .about__media {
     position: relative;
-    padding-bottom: var(--space-6);
   }
   .about__media :global(.about__photo) {
     --media-radius: var(--radius-lg);
-    aspect-ratio: 5 / 4;
+    aspect-ratio: 4 / 5;
   }
   .about__call {
     position: absolute;
-    right: var(--space-4);
-    bottom: 0;
+    left: var(--space-lg);
+    bottom: var(--space-lg);
     display: flex;
     align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4) var(--space-5);
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
     border-radius: var(--radius-md);
-    background: var(--color-blue);
-    color: var(--color-white);
+    background: var(--color-field);
+    color: var(--color-field-ink);
     text-decoration: none;
-    box-shadow: var(--shadow-card);
+    transition: background-color var(--dur-short) var(--ease-out);
   }
   .about__call:hover {
-    background: var(--color-blue-dark);
-    color: var(--color-white);
+    background: var(--color-accent);
+    color: var(--color-field-ink);
   }
-  .about__call-icon {
-    display: grid;
-    place-items: center;
-    inline-size: 2.75rem;
-    block-size: 2.75rem;
-    border-radius: 50%;
-    background: var(--color-green);
-    color: var(--color-ink);
+  .about__call:active {
+    background: var(--color-accent-hover);
   }
-  .about__call-icon :global(.icon) {
-    inline-size: 1.3rem;
-    block-size: 1.3rem;
+  .about__call:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+  .about__call :global(.icon) {
+    flex: none;
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+    color: var(--color-signal);
   }
   .about__call-label {
     display: block;
-    font-size: var(--fs-sm);
-    color: var(--color-blue-soft);
+    font-size: var(--text-sm);
+    color: var(--color-field-muted);
   }
   .about__call strong {
-    font-size: 1.25rem;
+    font-size: var(--text-title);
+    line-height: 1.2;
     white-space: nowrap;
   }
   .about__text > * + * {
-    margin-top: var(--space-4);
+    margin-top: var(--space-md);
   }
   .about__text h2 {
-    margin-top: 0;
-    max-inline-size: 18ch;
+    max-inline-size: 16ch;
+    margin-bottom: var(--space-lg);
   }
   .about__text p {
-    color: var(--text-muted);
+    color: var(--color-ink-2);
+    max-inline-size: 52ch;
   }
   .about__text p strong {
     color: var(--color-ink);
   }
   .about__scope {
     display: grid;
-    gap: var(--space-3);
-    padding-block: var(--space-3);
+    gap: 0 var(--gap-columns);
+    padding-block: var(--space-md) var(--space-lg);
   }
   .about__scope li {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
+    position: relative;
+    padding: var(--space-sm) 0 var(--space-sm) var(--space-lg);
+    border-bottom: var(--rule);
     font-weight: var(--fw-medium);
   }
-  .about__scope :global(.icon) {
-    flex: none;
-    inline-size: 1.4rem;
-    block-size: 1.4rem;
-    padding: 0.2rem;
-    border-radius: 50%;
-    background: var(--color-green);
-    color: var(--color-ink);
-    stroke-width: 2.75;
+  .about__scope li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    inline-size: var(--space-sm);
+    block-size: 2px;
+    background: var(--color-signal);
   }
-  .about__text .btn {
-    margin-top: var(--space-6);
-  }
-  @media (min-width: 40em) {
+  @media (min-width: 40rem) {
     .about__scope {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-  @media (min-width: 64em) {
+  @media (min-width: 60rem) {
     .about__inner {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: var(--space-9);
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--gap-columns);
+    }
+    .about__media {
+      grid-column: 1 / span 5;
+    }
+    .about__text {
+      grid-column: 7 / span 6;
     }
   }
 
-  /* ── Sterke punten (blauwe band) ──────── */
+  /* ── De blauwe band: het nummer van de bus ──────────── */
   .strengths {
-    position: relative;
-    overflow: hidden;
-    background: var(--color-blue);
-    color: var(--color-white);
-    padding-block: clamp(3.5rem, 2rem + 5vw, 7rem);
+    background: var(--color-band);
+    color: var(--color-field-ink);
+    padding-block: var(--section-gap-s);
   }
   .strengths__inner {
-    position: relative;
     display: grid;
-    gap: var(--space-8);
-    align-items: center;
+    gap: var(--space-2xl) var(--gap-columns);
   }
   .strengths h2 {
-    color: var(--color-white);
-    font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
-    line-height: 1.1;
-    max-inline-size: 16ch;
-  }
-  .strengths__call {
-    display: inline-grid;
-    gap: var(--space-1);
-    margin-top: var(--space-7);
-    padding: var(--space-5) var(--space-6);
-    border-radius: var(--radius-md);
-    background: rgb(255 255 255 / 0.1);
-    color: var(--color-white);
-    text-decoration: none;
-    transition: background-color var(--dur) var(--ease);
-  }
-  .strengths__call:hover {
-    background: rgb(255 255 255 / 0.16);
-    color: var(--color-white);
-  }
-  .strengths__number {
-    font-size: clamp(1.75rem, 1.3rem + 1.8vw, 2.75rem);
-    font-weight: var(--fw-bold);
-    line-height: 1.1;
-    color: var(--color-white);
-    white-space: nowrap;
-    text-decoration: underline;
-    text-decoration-color: var(--color-green);
-    text-decoration-thickness: 4px;
-    text-underline-offset: 0.2em;
-  }
-  .strengths__label {
-    color: var(--color-blue-tint);
+    color: var(--color-field-ink);
+    max-inline-size: 14ch;
   }
   .strengths__list {
-    position: relative;
     display: grid;
-    gap: var(--space-6);
+    gap: 0 var(--gap-columns);
+    align-content: start;
   }
   .strengths__list li {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-  }
-  .strengths__list :global(.icon) {
-    flex: none;
-    inline-size: 3rem;
-    block-size: 3rem;
-    stroke-width: 1.4;
-    color: var(--color-white);
+    display: grid;
+    gap: var(--space-2xs);
+    padding-block: var(--space-md);
+    border-top: 1px solid var(--color-band-rule);
   }
   .strengths__list strong {
-    display: block;
-    font-size: 1.25rem;
+    font-size: var(--fs-h4);
     line-height: 1.25;
   }
   .strengths__list span {
-    color: var(--color-blue-tint);
+    color: var(--color-band-muted);
   }
-  @media (min-width: 40em) {
+  .strengths__call {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-xs) var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-band-rule);
+    color: var(--color-field-ink);
+    text-decoration: none;
+  }
+  .strengths__number {
+    font-size: var(--text-figure);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    text-decoration: underline;
+    text-decoration-color: var(--color-signal);
+    text-decoration-thickness: 0.06em;
+    text-underline-offset: 0.16em;
+  }
+  .strengths__label {
+    font-size: var(--text-lead);
+    color: var(--color-band-muted);
+  }
+  .strengths__call:hover {
+    color: var(--color-field-ink);
+  }
+  .strengths__call:hover .strengths__label {
+    color: var(--color-field-ink);
+  }
+  .strengths__call:active .strengths__number {
+    text-decoration-color: var(--color-field-ink);
+  }
+  .strengths__call:focus-visible {
+    outline: 2px solid var(--color-field-ink);
+    outline-offset: 6px;
+  }
+  @media (min-width: 40rem) {
     .strengths__list {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: var(--space-7) var(--space-6);
     }
   }
-  @media (min-width: 64em) {
+  @media (min-width: 60rem) {
     .strengths__inner {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      grid-template-columns: repeat(12, minmax(0, 1fr));
     }
-    /* Grote lichte cirkel achter de punten */
-    .strengths__list::before {
-      content: '';
-      position: absolute;
-      z-index: 0;
-      left: 50%;
-      top: 50%;
-      inline-size: 46rem;
-      block-size: 46rem;
-      border-radius: 50%;
-      background: rgb(255 255 255 / 0.07);
-      transform: translate(-46%, -50%);
+    .strengths h2 {
+      grid-column: 1 / span 5;
     }
-    .strengths__list li {
-      position: relative;
+    .strengths__list {
+      grid-column: 7 / span 6;
+    }
+    .strengths__call {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ── Ons werk: met weinig foto's staat de kop naast het beeld ── */
+  @media (min-width: 64rem) {
+    .work-section .container:has(:global(.work--few)) {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--gap-columns);
+      align-items: center;
+    }
+    .work-section .container:has(:global(.work--few)) > .section-head {
+      grid-column: 1 / span 4;
+      display: block;
+      margin-bottom: 0;
+    }
+    .work-section .container:has(:global(.work--few)) > .section-head > p {
+      margin-top: var(--space-lg);
+    }
+    .work-section .container:has(:global(.work--few)) > :global(.work) {
+      grid-column: 6 / span 7;
     }
   }
 
   /* ── Projecten ────────────────────────── */
   .project-grid {
     display: grid;
-    gap: var(--space-5);
+    gap: var(--space-2xl) var(--gap-columns);
   }
   .project-grid > li {
     display: flex;
@@ -593,12 +496,12 @@ const scope = [
   .project-grid > li > :global(*) {
     flex: 1;
   }
-  @media (min-width: 40em) {
+  @media (min-width: 40rem) {
     .project-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-  @media (min-width: 64em) {
+  @media (min-width: 64rem) {
     .project-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }

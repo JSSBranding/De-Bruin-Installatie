@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
 import Media from '../components/Media.astro';
-import Icon from '../components/Icon.astro';
 import Pending from '../components/Pending.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { company } from '../config/site';
@@ -33,7 +32,6 @@ const values = [
 >
   <PageHero
     title="Een betrokken vakpartner uit Sint-Oedenrode"
-    eyebrow="Over ons"
     intro={`${company.name} is een allround installatiebedrijf uit ${company.city}. We verzorgen installatiewerk in en rondom woningen, bij nieuwbouw en renovatie, en zorgen met onderhoud en service dat je installaties goed blijven werken.`}
     breadcrumbs={[{ label: 'Over ons' }]}
   />
@@ -50,7 +48,6 @@ const values = [
         <Media id="about.dennis" sizes="(min-width: 64em) 420px, 100vw" />
       </div>
       <div class="about-split__text">
-        <p class="eyebrow">Dennis de Bruin en het team</p>
         <h2 id="dennis-title">Korte lijnen, persoonlijk contact</h2>
         <p class="lead">
           Achter {company.name} staat {company.owner}. Samen met zijn team verzorgt hij installatiewerk met oog
@@ -71,7 +68,6 @@ const values = [
   <section class="section section--alt" aria-labelledby="waarden-title">
     <div class="container">
       <div class="section-head">
-        <p class="eyebrow">Waar we voor staan</p>
         <h2 id="waarden-title">Zo werken we</h2>
       </div>
       <ul class="values" role="list">
@@ -90,14 +86,13 @@ const values = [
   <section class="section" aria-labelledby="werk-title">
     <div class="container about-split about-split--reverse">
       <div class="about-split__text">
-        <p class="eyebrow">Ons werk</p>
         <h2 id="werk-title">Voor nieuwbouw, renovatie en onderhoud</h2>
         <p>
           Of je nu een badkamer laat vernieuwen, je verwarming wilt vervangen of je woning stap voor stap verduurzaamt: we
           kijken naar het geheel. Badkamer, leidingwerk, verwarming en ventilatie hangen met elkaar samen. Daarom stemmen
           we ze op elkaar af.
         </p>
-        <a href="/diensten/" class="link-arrow">Bekijk onze diensten <Icon name="arrow" /></a>
+        <a href="/diensten/" class="link-arrow">Bekijk onze diensten</a>
       </div>
       <div class="about-split__media">
         <Media id="about.werk" sizes="(min-width: 64em) 520px, 100vw" />

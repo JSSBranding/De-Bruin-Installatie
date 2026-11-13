@@ -25,7 +25,7 @@ const d = service.data;
       <a href={serviceHref(service)} class="service-card__link">{d.title}</a>
     </H>
     <p class="service-card__text">{d.summary}</p>
-    <span class="service-card__more" aria-hidden="true">Lees meer <span class="chev">»</span></span>
+    <span class="service-card__more" aria-hidden="true">Lees meer</span>
   </div>
 </article>
 
@@ -34,31 +34,19 @@ const d = service.data;
     position: relative;
     display: flex;
     flex-direction: column;
-    padding: 0.875rem;
-    background: var(--color-white);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 1px 0 rgb(12 42 71 / 0.04);
-    transition:
-      box-shadow var(--dur) var(--ease),
-      transform var(--dur) var(--ease);
   }
   .service-card :global(.service-card__media) {
-    --media-radius: var(--radius-md);
-  }
-  .service-card:hover,
-  .service-card:focus-within {
-    box-shadow: var(--shadow-card);
-    transform: translateY(-3px);
+    --media-radius: var(--radius-lg);
   }
   .service-card__body {
     display: flex;
     flex-direction: column;
     flex: 1;
-    padding: var(--space-5) var(--space-3) var(--space-3);
+    padding-top: var(--space-lg);
   }
   .service-card__title {
-    font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
-    margin-bottom: var(--space-3);
+    font-size: var(--text-title);
+    margin-bottom: var(--space-sm);
   }
   .service-card__link {
     color: var(--color-ink);
@@ -68,34 +56,35 @@ const d = service.data;
     content: '';
     position: absolute;
     inset: 0;
-    z-index: 2;
+    z-index: var(--z-raised);
   }
   .service-card__link:focus-visible {
     outline: none;
   }
   .service-card:has(.service-card__link:focus-visible) {
-    outline: 3px solid var(--focus);
-    outline-offset: 3px;
+    outline: 2px solid var(--color-focus);
+    outline-offset: 6px;
   }
   .service-card:hover .service-card__link {
-    color: var(--color-blue);
+    color: var(--color-accent);
+  }
+  .service-card:active .service-card__link {
+    color: var(--color-accent-hover);
   }
   .service-card__text {
-    color: var(--text-muted);
-    margin-bottom: var(--space-5);
+    color: var(--color-ink-2);
+    margin-bottom: var(--space-lg);
+    max-inline-size: 42ch;
   }
   .service-card__more {
     margin-top: auto;
-    font-weight: var(--fw-bold);
-    color: var(--color-ink);
+    font-weight: var(--fw-medium);
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule-strong);
+    text-underline-offset: 0.3em;
   }
-  .chev {
-    display: inline-block;
-    margin-left: 0.25rem;
-    color: var(--color-blue);
-    transition: transform var(--dur) var(--ease);
-  }
-  .service-card:hover .chev {
-    transform: translateX(3px);
+  .service-card:hover .service-card__more {
+    text-decoration-color: currentColor;
   }
 </style>

@@ -1,29 +1,49 @@
 ---
 import ServiceCard from './ServiceCard.astro';
-import { getServices } from '../lib/content';
+import { getServices, serviceHref } from '../lib/content';
 
 interface Props {
   headingLevel?: 'h2' | 'h3';
   exclude?: string;
+  /** cards: met foto (overzichtspagina) · index: groot gezette titels op lijnen (homepage) */
+  variant?: 'cards' | 'index';
 }
-const { headingLevel = 'h3', exclude } = Astro.props;
+const { headingLevel = 'h3', exclude, variant = 'cards' } = Astro.props;
+const H = headingLevel;
 const services = (await getServices()).filter((s) => s.id !== exclude);
 ---
 
-<ul class="service-grid" role="list">
-  {
-    services.map((service) => (
-      <li>
-        <ServiceCard service={service} headingLevel={headingLevel} />
-      </li>
-    ))
-  }
-</ul>
+{
+  variant === 'index' ? (
+    <ol class="service-index" role="list">
+      {services.map((service) => (
+        <li class="service-index__item">
+          <H class="service-index__title">
+            <a href={serviceHref(service)} class="service-index__link">
+              {service.data.title}
+            </a>
+          </H>
+          <span class="service-index__more" aria-hidden="true">
+            Lees meer
+          </span>
+        </li>
+      ))}
+    </ol>
+  ) : (
+    <ul class="service-grid" role="list">
+      {services.map((service) => (
+        <li>
+          <ServiceCard service={service} headingLevel={headingLevel} />
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 <style>
   .service-grid {
     display: grid;
-    gap: var(--space-5);
+    gap: var(--space-2xl) var(--gap-columns);
   }
   .service-grid > li {
     display: flex;
@@ -31,15 +51,98 @@ const services = (await getServices()).filter((s) => s.id !== exclude);
   .service-grid > li > :global(*) {
     flex: 1;
   }
-  @media (min-width: 40em) {
+  @media (min-width: 40rem) {
     .service-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-  @media (min-width: 64em) {
+  @media (min-width: 64rem) {
     .service-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-6);
+    }
+  }
+
+  /* Index: zes diensten als groot gezette tegels, gescheiden door lijnen */
+  .service-index {
+    display: grid;
+    border-top: 1px solid var(--color-rule-strong);
+  }
+  .service-index__item {
+    position: relative;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: var(--space-md);
+    padding: var(--space-lg) var(--space-lg) var(--space-lg) 0;
+    border-bottom: 1px solid var(--color-rule-strong);
+    transition: background-color var(--dur-short) var(--ease-out);
+  }
+  .service-index__title {
+    align-self: start;
+    font-size: clamp(1.5rem, 1.2vw + 1rem, 2.125rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    max-inline-size: none;
+    hyphens: manual;
+    overflow-wrap: normal;
+  }
+  .service-index__link {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+  .service-index__link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: var(--z-raised);
+  }
+  .service-index__link:focus-visible {
+    outline: none;
+  }
+  .service-index__item:has(.service-index__link:focus-visible) {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
+  }
+  .service-index__more {
+    font-weight: var(--fw-medium);
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rule-strong);
+    text-underline-offset: 0.3em;
+  }
+  .service-index__item:hover .service-index__link {
+    color: var(--color-accent);
+  }
+  .service-index__item:hover .service-index__more {
+    text-decoration-color: currentColor;
+  }
+  .service-index__item:active .service-index__link {
+    color: var(--color-accent-hover);
+  }
+  @media (min-width: 40rem) {
+    .service-index__item {
+      min-block-size: 15rem;
+    }
+  }
+  @media (min-width: 40rem) and (max-width: 74.99rem) {
+    .service-index {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .service-index__item:nth-child(even) {
+      padding-left: var(--space-lg);
+      border-left: var(--rule);
+    }
+  }
+  @media (min-width: 75rem) {
+    .service-index {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .service-index__item {
+      min-block-size: 17rem;
+      padding: var(--space-xl) var(--space-xl) var(--space-xl) 0;
+    }
+    .service-index__item:not(:nth-child(3n + 1)) {
+      padding-left: var(--space-xl);
+      border-left: var(--rule);
     }
   }
 </style>

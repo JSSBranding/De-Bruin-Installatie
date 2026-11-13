@@ -1,18 +1,28 @@
 ---
 /**
  * Foto's van uitgevoerd werk, filterbaar per soort. Zonder JavaScript is alles zichtbaar.
+ * Alleen foto's die echt aanwezig zijn worden getoond, elk bestand één keer; lege
+ * plekken staan in docs/ASSETS.md. Zijn er minder dan zes, dan vervallen de filterknoppen.
  */
 import Media from './Media.astro';
 import { images, type ImageKey } from '../config/images';
+import { findImage } from '../lib/images';
+
+interface Props {
+  /** Bestanden die elders op de pagina al staan */
+  exclude?: string[];
+}
+const { exclude = [] } = Astro.props;
 
 const filters = [
   { value: 'alles', label: 'Alles' },
   { value: 'badkamer', label: 'Badkamers' },
   { value: 'verwarming', label: 'Verwarming' },
   { value: 'warmtepomp', label: 'Warmtepompen' },
+  { value: 'zonnepanelen', label: 'Zonnepanelen' },
 ] as const;
 
-const items: { id: ImageKey; cat: (typeof filters)[number]['value'] }[] = [
+const all: { id: ImageKey; cat: (typeof filters)[number]['value'] }[] = [
   { id: 'badkamers.hero', cat: 'badkamer' },
   { id: 'warmtepompen.1', cat: 'warmtepomp' },
   { id: 'verwarming.hero', cat: 'verwarming' },
@@ -22,13 +32,25 @@ const items: { id: ImageKey; cat: (typeof filters)[number]['value'] }[] = [
   { id: 'warmtepompen.2', cat: 'warmtepomp' },
   { id: 'badkamers.3', cat: 'badkamer' },
   { id: 'warmtepompen.3', cat: 'warmtepomp' },
+  { id: 'werk.zonnepanelen', cat: 'zonnepanelen' },
 ];
+
+const seen = new Set(exclude);
+const items = all.filter(({ id }) => {
+  const file = images[id].file;
+  if (seen.has(file) || !findImage(file)) return false;
+  seen.add(file);
+  return true;
+});
+const usedFilters = filters.filter((f) => f.value === 'alles' || items.some((i) => i.cat === f.value));
+const showFilters = items.length >= 6 && usedFilters.length > 2;
+const few = items.length < 3;
 ---
 
-<div class="work" data-work>
+<div class:list={['work', { 'work--few': few }]} data-work>
   <div class="work__filters" role="group" aria-label="Filter op soort werk" data-work-filters hidden>
     {
-      filters.map((f, i) => (
+      showFilters && usedFilters.map((f, i) => (
         <button type="button" class="work__filter" data-filter={f.value} aria-pressed={i === 0 ? 'true' : 'false'}>
           {f.label}
         </button>
@@ -40,7 +62,7 @@ const items: { id: ImageKey; cat: (typeof filters)[number]['value'] }[] = [
       items.map((item) => (
         <li data-cat={item.cat}>
           <figure>
-            <Media id={item.id} ratio="4/3" sizes="(min-width: 64em) 380px, (min-width: 40em) 50vw, 100vw" class="work__media" />
+            <Media id={item.id} ratio="4/3" sizes={few ? '(min-width: 60rem) 50vw, 100vw' : '(min-width: 64em) 420px, (min-width: 40em) 50vw, 100vw'} class="work__media" />
             <figcaption>{images[item.id].alt}</figcaption>
           </figure>
         </li>
@@ -54,7 +76,7 @@ const items: { id: ImageKey; cat: (typeof filters)[number]['value'] }[] = [
     const bar = root.querySelector<HTMLElement>('[data-work-filters]');
     const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')];
     const items = [...root.querySelectorAll<HTMLElement>('[data-cat]')];
-    if (!bar) return;
+    if (!bar || buttons.length === 0) return;
     bar.hidden = false;
     buttons.forEach((btn) =>
       btn.addEventListener('click', () => {
@@ -70,53 +92,72 @@ const items: { id: ImageKey; cat: (typeof filters)[number]['value'] }[] = [
   .work__filters {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-2);
-    margin-bottom: var(--space-7);
+    gap: var(--space-xs);
+    margin-bottom: var(--space-xl);
   }
   .work__filters[hidden] {
     display: none;
   }
   .work__filter {
-    min-block-size: 2.75rem;
-    padding: 0.5rem 1.25rem;
-    border: 0;
-    border-radius: 999px;
+    min-block-size: 44px;
+    padding: 0 var(--space-md);
+    border: 1px solid var(--color-rule-strong);
+    border-radius: var(--radius-sm);
     background: transparent;
     font-weight: var(--fw-medium);
     color: var(--color-ink);
-    transition: background-color var(--dur) var(--ease);
+    transition:
+      background-color var(--dur-short) var(--ease-out),
+      border-color var(--dur-short) var(--ease-out);
   }
   .work__filter:hover {
-    background: var(--color-blue-tint);
+    border-color: var(--color-ink);
+  }
+  .work__filter:active {
+    background: var(--color-paper-2);
+  }
+  .work__filter:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
   }
   .work__filter[aria-pressed='true'] {
-    background: var(--color-blue);
-    color: var(--color-white);
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-paper);
   }
   .work__grid {
     display: grid;
-    gap: var(--space-5);
+    gap: var(--space-xl) var(--gap-columns);
   }
   .work__grid li[hidden] {
     display: none;
   }
   .work__grid :global(.work__media) {
-    --media-radius: var(--radius-md);
+    --media-radius: var(--radius-lg);
   }
   .work__grid figcaption {
-    margin-top: var(--space-3);
-    font-weight: var(--fw-medium);
+    margin-top: var(--space-sm);
+    font-size: var(--text-sm);
+    color: var(--color-ink-2);
   }
-  @media (min-width: 40em) {
+  @media (min-width: 40rem) {
     .work__grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
-  @media (min-width: 64em) {
+  @media (min-width: 64rem) {
     .work__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: var(--space-6);
+    }
+    /* Weinig foto's: groot, één of twee naast elkaar */
+    .work--few .work__grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .work--few .work__grid > li {
+      grid-column: span 6;
+    }
+    .work--few .work__grid > li:only-child {
+      grid-column: 1 / -1;
     }
   }
 </style>

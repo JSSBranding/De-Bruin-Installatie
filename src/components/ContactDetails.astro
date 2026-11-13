@@ -96,8 +96,9 @@ const a = company.address;
     flex: none;
     inline-size: 2.75rem;
     block-size: 2.75rem;
-    background: var(--color-blue);
-    color: var(--color-white);
+    border: var(--rule);
+    border-radius: var(--radius-md);
+    color: var(--color-accent);
   }
   .contact-details__icon :global(.icon) {
     inline-size: 1.25rem;
@@ -106,8 +107,6 @@ const a = company.address;
   .contact-details__label {
     font-size: var(--fs-xs);
     font-weight: var(--fw-medium);
-    letter-spacing: var(--tracking-label);
-    text-transform: uppercase;
     color: var(--text-muted);
   }
   .contact-details a {

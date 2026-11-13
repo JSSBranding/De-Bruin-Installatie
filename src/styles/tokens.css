@@ -1,16 +1,15 @@
 /*
  * Design tokens – De Bruin Installatie
- * Voorlopig webpalet, afgeleid van de bouwhekbanner (pdf).
- * Definitieve huisstijlwaarden? Pas alleen dit bestand aan.
+ * Merkkleuren uit het logo en de bedrijfsbussen: blauw #005DA7, groen #97BE0C,
+ * marine #0C2A47. Lettertype Ubuntu. Definitieve huisstijlwaarden? Pas alleen dit bestand aan.
  *
  * Gecontroleerde contrasten (WCAG):
- *  blauw   #005DA7 op wit ............ 6.7:1  (tekst, knoppen)
- *  wit op  #005DA7 ................... 6.7:1  (knoptekst, CTA-blok)
- *  groen   #97BE0C op wit ............ 2.2:1  → NIET voor tekst; alleen accentvlakken/lijnen
- *  inkt    #19171B op groen .......... 8.2:1  (donkere tekst op groen mag)
- *  groen-inkt #4C6B00 op wit ......... 6.2:1  (groene tekst, labels)
- *  grijs-inkt #5C5D60 op wit ......... 6.6:1  (secundaire tekst)
- *  middengrijs #868789 op wit ........ 3.6:1  → alleen decoratief of ≥ 24px
+ *  blauw   op papier ................. 6.5:1  (tekst, knoppen)
+ *  papier  op blauw .................. 6.5:1  (knoptekst, blauwe band)
+ *  groen   op papier ................. 2.2:1  → NIET voor tekst; alleen lijnen en markeringen
+ *  inkt    op groen .................. 8:1    (donkere tekst op groen mag)
+ *  inkt-2  op papier ................. 9:1    (lopende tekst)
+ *  gedempt op papier ................. 5.4:1  (bijschriften)
  */
 
 @font-face {
@@ -52,91 +51,185 @@
 }
 
 :root {
-  /* Merkkleuren */
-  --color-blue: #005da7;
-  --color-blue-dark: #00487f;
-  --color-navy: #0c2a47;
-  --color-blue-mist: #f2f6fb;
-  --color-blue-tint: #e8f0f8;
-  --color-blue-soft: #c9ddf0;
-  --color-green: #97be0c;
-  --color-green-ink: #4c6b00;
-  --color-lime: #bccd04;
-  --color-grey: #868789;
-  --color-grey-ink: #5c5d60;
-  --color-grey-light: #ececed;
-  --color-grey-lighter: #f6f6f7;
-  --color-ink: #19171b;
-  --color-white: #ffffff;
-  --color-error: #b3261e;
-  --color-error-tint: #fdecea;
-  --color-success-tint: #f1f7dc;
+  /* ── Merk (OKLCH van de logokleuren) ─────────────────── */
+  --brand-blue: oklch(47.5% 0.14 251.5); /* #005DA7 */
+  --brand-blue-deep: oklch(39.5% 0.111 249.8); /* #00487F */
+  --brand-navy: oklch(28% 0.064 250.6); /* #0C2A47 */
+  --brand-green: oklch(74.6% 0.181 123.3); /* #97BE0C */
+  --brand-green-ink: oklch(48.5% 0.125 126.9); /* #4C6B00 */
 
-  /* Functionele kleuren */
+  /* ── Papier, inkt en lijnen (licht getint naar steen) ── */
+  --color-paper: oklch(98.4% 0.004 95);
+  --color-paper-2: oklch(95.8% 0.007 95);
+  --color-paper-3: oklch(92.6% 0.009 95);
+  --color-ink: oklch(22% 0.03 255);
+  --color-ink-2: oklch(36% 0.025 255);
+  --color-muted: oklch(49% 0.018 255);
+  --color-rule: oklch(87.5% 0.01 95);
+  --color-rule-strong: oklch(76% 0.012 95);
+
+  /* Accent = merkblauw; het enige signaal voor acties en links */
+  --color-accent: var(--brand-blue);
+  --color-accent-hover: var(--brand-blue-deep);
+  --color-accent-ink: var(--color-paper);
+  --color-focus: oklch(52% 0.17 251.5);
+  --color-signal: var(--brand-green);
+
+  /* Donkere vlakken (marine) en de blauwe band */
+  --color-field: var(--brand-navy);
+  --color-field-ink: var(--color-paper);
+  --color-field-muted: oklch(83% 0.035 247);
+  --color-field-rule: oklch(42% 0.06 250);
+  --color-band: var(--brand-blue);
+  --color-band-muted: oklch(90% 0.03 247);
+  --color-band-rule: oklch(60% 0.11 251);
+  --color-on-dark-hover: oklch(100% 0 0 / 0.1);
+  --color-on-dark-edge: oklch(100% 0 0 / 0.55);
+  --color-overlay-shadow: oklch(22% 0.03 255 / 0.18);
+
+  --color-error: oklch(50.1% 0.178 28.7);
+  --color-error-tint: oklch(96% 0.02 28);
+  --color-success-tint: oklch(96% 0.04 123);
+  --color-success: var(--brand-green-ink);
+
+  /* ── Oude namen, gekoppeld aan het nieuwe systeem ────── */
+  --color-blue: var(--color-accent);
+  --color-blue-dark: var(--color-accent-hover);
+  --color-navy: var(--color-field);
+  --color-blue-mist: var(--color-paper-2);
+  --color-blue-tint: var(--color-paper-3);
+  --color-blue-soft: var(--color-field-muted);
+  --color-green: var(--brand-green);
+  --color-green-ink: var(--brand-green-ink);
+  --color-lime: var(--brand-green);
+  --color-grey: var(--color-rule-strong);
+  --color-grey-ink: var(--color-muted);
+  --color-grey-light: var(--color-paper-3);
+  --color-grey-lighter: var(--color-paper-2);
+  --color-white: var(--color-paper);
+
   --text: var(--color-ink);
-  --text-muted: var(--color-grey-ink);
-  --surface: var(--color-white);
-  --surface-alt: var(--color-blue-mist);
-  --border: #d6d6d8;
-  --focus: var(--color-blue);
-  --link: var(--color-blue);
+  --text-muted: var(--color-ink-2);
+  --surface: var(--color-paper);
+  --surface-alt: var(--color-paper-2);
+  --border: var(--color-rule);
+  --focus: var(--color-focus);
+  --link: var(--color-accent);
 
-  /* Typografie */
+  /* ── Typografie ──────────────────────────────────────── */
   --font-sans: 'Ubuntu', 'Ubuntu Fallback', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-display: var(--font-sans);
+  --font-body: var(--font-sans);
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-bold: 700;
 
-  --fs-xs: 0.8125rem; /* 13 */
-  --fs-sm: 0.9375rem; /* 15 */
-  --fs-base: 1.0625rem; /* 17 */
-  --fs-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-md: 1.0625rem;
+  --text-lead: clamp(1.125rem, 0.35vw + 1rem, 1.375rem);
+  --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.625rem);
+  --text-section: clamp(2rem, 2.5vw + 1rem, 3.375rem);
+  --text-display-s: clamp(2.25rem, 3vw + 1rem, 3.75rem);
+  --text-display: clamp(2.75rem, 4.2vw + 1rem, 5rem);
+  --text-figure: clamp(2.5rem, 4.6vw + 0.75rem, 5.25rem);
+  --tracking-display: -0.025em;
+
+  --fs-xs: var(--text-xs);
+  --fs-sm: var(--text-sm);
+  --fs-base: var(--text-md);
+  --fs-lead: var(--text-lead);
   --fs-h4: 1.1875rem;
-  --fs-h3: clamp(1.25rem, 1.15rem + 0.45vw, 1.5rem);
-  --fs-h2: clamp(1.75rem, 1.45rem + 1.3vw, 2.5rem);
-  --fs-h1: clamp(2.125rem, 1.6rem + 2.4vw, 3.625rem);
-  --fs-display: clamp(2.375rem, 1.6rem + 3.4vw, 4.25rem);
+  --fs-h3: var(--text-title);
+  --fs-h2: var(--text-section);
+  --fs-h1: var(--text-display-s);
+  --fs-display: var(--text-display);
 
-  --lh-tight: 1.1;
-  --lh-snug: 1.25;
+  --lh-tight: 1.04;
+  --lh-snug: 1.2;
   --lh-body: 1.6;
-  --tracking-label: 0.14em; /* echo van "I N S T A L L A T I E" in het logo */
+  --tracking-label: 0;
 
-  /* Ruimte (4px-raster) */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
+  /* ── Ruimte ──────────────────────────────────────────── */
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 144px;
+  --space-1: var(--space-2xs);
+  --space-2: var(--space-xs);
+  --space-3: var(--space-sm);
+  --space-4: var(--space-md);
+  --space-5: var(--space-lg);
   --space-6: 2rem;
   --space-7: 3rem;
-  --space-8: 4rem;
-  --space-9: 6rem;
-  --section-y: clamp(3.5rem, 2.5rem + 4vw, 6.5rem);
-  --gutter: clamp(1rem, 0.6rem + 1.8vw, 2rem);
+  --space-8: var(--space-2xl);
+  --space-9: var(--space-3xl);
+  --section-gap-s: 120px;
+  --section-gap: 144px;
+  --section-gap-l: 176px;
+  --section-y: var(--section-gap-s);
 
-  /* Layout */
-  --container: 76rem;
+  /* ── Layout ──────────────────────────────────────────── */
+  --container: 1440px;
+  --gutter: 64px;
+  --gap-columns: 32px;
   --container-narrow: 46rem;
   --header-h: 4.5rem;
 
-  /* Afronding */
-  --radius-sm: 6px;
-  --radius-md: 14px;
-  --radius-lg: 22px;
-  --media-radius: var(--radius-md);
+  /* ── Afronding, lijnen en diepte ─────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-card: var(--radius-lg);
+  --radius-pill: 999px;
+  --media-radius: var(--radius-lg);
+  --rule: 1px solid var(--color-rule);
+  --shadow-card: 0 1px 2px oklch(22% 0.03 255 / 0.06);
 
-  /* Lijnen & schaduw */
-  --rule: 1px solid var(--border);
-  --shadow-card: 0 1px 2px rgb(12 42 71 / 0.05), 0 18px 40px -22px rgb(12 42 71 / 0.28);
+  /* ── Beweging ────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+  --ease: var(--ease-out);
+  --dur: var(--dur-short);
 
-  /* Beweging */
-  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
-  --dur: 180ms;
+  --z-base: 1;
+  --z-raised: 10;
+  --z-sticky-nav: 300;
+  --z-toast: 500;
 }
 
+@media (max-width: 60rem) {
+  :root {
+    --gutter: 24px;
+    --section-gap-s: 80px;
+    --section-gap: 96px;
+    --section-gap-l: 120px;
+  }
+}
+@media (max-width: 40rem) {
+  :root {
+    --gutter: 16px;
+    --section-gap-s: 64px;
+    --section-gap: 72px;
+    --section-gap-l: 96px;
+    --gap-columns: 16px;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   :root {
     --dur: 0ms;
+    --dur-micro: 0ms;
+    --dur-short: 0ms;
+    --dur-long: 0ms;
   }
 }

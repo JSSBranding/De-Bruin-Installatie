@@ -19,18 +19,14 @@ const {
 <section class="cta-band on-dark" aria-labelledby="cta-title">
   <div class="container cta-band__inner">
     <div class="cta-band__text">
-      <p class="eyebrow eyebrow--light">Contact</p>
       <h2 id="cta-title">{title}</h2>
       <p>{text}</p>
     </div>
     <div class="cta-band__actions">
-      <a href={ctaHref} class="btn btn--light">
-        {ctaLabel}
-        <Icon name="arrow" class="icon--arrow" />
-      </a>
+      <a href={ctaHref} class="btn btn--light btn--lg">{ctaLabel}</a>
       {
         company.phone && (
-          <a href={company.phone.href} class="btn btn--ghost-light">
+          <a href={company.phone.href} class="btn btn--ghost-light btn--lg">
             <Icon name="phone" />
             Bel {company.phone.display}
           </a>
@@ -42,53 +38,42 @@ const {
 
 <style>
   .cta-band {
-    position: relative;
-    overflow: hidden;
-    background: var(--color-navy);
-    color: var(--color-white);
-    padding-block: clamp(3rem, 2rem + 4vw, 5rem);
-  }
-  /* Gekantelde tegels uit het beeldmerk, zeer subtiel */
-  .cta-band::after {
-    content: '';
-    position: absolute;
-    right: -6rem;
-    bottom: -9rem;
-    inline-size: 26rem;
-    block-size: 26rem;
-    background:
-      linear-gradient(rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.07)) 0 0 / 55% 50% no-repeat,
-      linear-gradient(rgb(255 255 255 / 0.05), rgb(255 255 255 / 0.05)) 100% 100% / 48% 50% no-repeat;
-    transform: rotate(-8deg);
-    pointer-events: none;
+    background: var(--color-field);
+    color: var(--color-field-ink);
+    padding-block: var(--section-gap-s);
   }
   .cta-band__inner {
-    position: relative;
-    z-index: 1;
     display: grid;
-    gap: var(--space-6);
+    gap: var(--space-xl) var(--gap-columns);
     align-items: end;
   }
   .cta-band h2 {
-    color: var(--color-white);
-    max-inline-size: 22ch;
+    color: var(--color-field-ink);
+    max-inline-size: 20ch;
   }
-  .cta-band__text p:not(.eyebrow) {
-    margin-top: var(--space-4);
-    max-inline-size: 38rem;
-    color: var(--color-blue-tint);
-    font-size: var(--fs-lead);
+  .cta-band__text p {
+    margin-top: var(--space-lg);
+    max-inline-size: 46ch;
+    color: var(--color-field-muted);
+    font-size: var(--text-lead);
   }
   .cta-band__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
+    gap: var(--space-sm);
   }
-  @media (min-width: 64em) {
+  .cta-band__actions :global(.icon) {
+    color: var(--color-signal);
+  }
+  @media (min-width: 60rem) {
     .cta-band__inner {
-      grid-template-columns: 1fr auto;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+    .cta-band__text {
+      grid-column: 1 / span 8;
     }
     .cta-band__actions {
+      grid-column: 9 / span 4;
       flex-direction: column;
       align-items: stretch;
     }

@@ -1,25 +1,23 @@
 ---
 /**
- * Kop voor binnenpagina's: kruimelpad, label, H1, intro en optioneel beeld + acties.
+ * Kop voor binnenpagina's: kruimelpad, H1, intro en optioneel beeld + acties.
  */
 import Breadcrumbs from './Breadcrumbs.astro';
 
 interface Props {
   title: string;
-  eyebrow?: string;
   intro?: string;
   breadcrumbs: { label: string; href?: string }[];
   /** true als er een media-slot is (beeld rechts) */
   withMedia?: boolean;
 }
-const { title, eyebrow, intro, breadcrumbs, withMedia = Astro.slots.has('media') } = Astro.props;
+const { title, intro, breadcrumbs, withMedia = Astro.slots.has('media') } = Astro.props;
 ---
 
 <section class:list={['page-hero', { 'page-hero--media': withMedia }]}>
   <div class="container page-hero__inner">
     <div class="page-hero__text">
       <Breadcrumbs items={breadcrumbs} />
-      {eyebrow && <p class="eyebrow">{eyebrow}</p>}
       <h1>{title}</h1>
       {intro && <p class="lead">{intro}</p>}
       <slot name="actions" />
@@ -36,57 +34,43 @@ const { title, eyebrow, intro, breadcrumbs, withMedia = Astro.slots.has('media')
 
 <style>
   .page-hero {
-    position: relative;
-    overflow: clip;
-    padding-block: var(--space-6) var(--section-y);
-    background: linear-gradient(var(--surface-alt), var(--surface-alt)) top / 100% calc(100% - 3rem) no-repeat;
-  }
-  .page-hero:not(.page-hero--media) {
-    background: var(--surface-alt);
-    padding-bottom: var(--space-8);
+    padding-block: var(--space-xl) var(--space-3xl);
+    background: var(--color-paper);
+    border-bottom: var(--rule);
   }
   .page-hero__inner {
     display: grid;
-    gap: var(--space-7);
+    gap: var(--space-2xl);
     align-items: center;
   }
   .page-hero__text :global(.breadcrumbs) {
-    margin-bottom: var(--space-6);
+    margin-bottom: var(--space-2xl);
   }
   .page-hero h1 {
-    max-inline-size: 18ch;
+    max-inline-size: 16ch;
   }
   .page-hero .lead {
-    margin-top: var(--space-5);
-    max-inline-size: 40rem;
+    margin-top: var(--space-lg);
   }
   .page-hero__text :global(.btn-row) {
-    margin-top: var(--space-6);
-  }
-  .page-hero__media {
-    position: relative;
-  }
-  .page-hero__media::before {
-    content: '';
-    position: absolute;
-    inset: auto -0.75rem -0.75rem auto;
-    inline-size: 45%;
-    block-size: 55%;
-    background: var(--color-green);
+    margin-top: var(--space-xl);
   }
   .page-hero__media :global(.media) {
-    position: relative;
+    --media-radius: var(--radius-lg);
   }
-  @media (min-width: 64em) {
+  @media (min-width: 60rem) {
     .page-hero__inner {
-      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-      gap: var(--space-8);
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: var(--gap-columns);
     }
-    .page-hero {
-      padding-top: var(--space-6);
+    .page-hero__text {
+      grid-column: 1 / span 6;
     }
-    .page-hero__media::before {
-      inset: auto -1.25rem -1.25rem auto;
+    .page-hero:not(.page-hero--media) .page-hero__text {
+      grid-column: 1 / span 9;
+    }
+    .page-hero__media {
+      grid-column: 7 / span 6;
     }
   }
 </style>

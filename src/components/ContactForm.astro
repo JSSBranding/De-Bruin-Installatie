@@ -169,7 +169,6 @@ const disabled = !formEndpoint && isProduction;
     <div class="contact-form__footer">
       <button type="submit" class="btn" data-submit disabled={disabled}>
         <span data-submit-label>Verstuur je aanvraag</span>
-        <Icon name="arrow" class="icon--arrow" />
       </button>
       <p class="contact-form__privacy">
         Lees in onze <a href="/privacy/">privacyverklaring</a> hoe we met je gegevens omgaan.
@@ -239,7 +238,7 @@ const disabled = !formEndpoint && isProduction;
     inline-size: 100%;
     min-block-size: 3rem;
     padding: 0.7rem 0.85rem;
-    border: 1px solid #8f9093;
+    border: 1px solid var(--color-muted);
     border-radius: var(--radius-sm);
     background: var(--color-white);
     font-size: var(--fs-base);

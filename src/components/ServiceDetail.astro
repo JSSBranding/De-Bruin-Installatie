@@ -18,18 +18,16 @@ interface Props {
 const { service, breadcrumbs } = Astro.props;
 const { Content } = await render(service);
 const d = service.data;
-const num = String(d.order).padStart(2, '0');
 const contactHref = `/contact/?onderwerp=${d.requestType}#contactformulier`;
 
 const projects = (await getProjects()).filter((p) => p.data.services.some((ref) => ref.id === service.id)).slice(0, 3);
 const others = (await getServices()).filter((s) => s.id !== service.id);
 ---
 
-<PageHero title={d.title} eyebrow={`Dienst ${num}`} intro={d.intro} breadcrumbs={breadcrumbs}>
+<PageHero title={d.title} intro={d.intro} breadcrumbs={breadcrumbs}>
   <div class="btn-row" slot="actions">
     <a href={contactHref} class="btn">
       {d.ctaLabel}
-      <Icon name="arrow" class="icon--arrow" />
     </a>
   </div>
   <Media slot="media" id={d.heroImage as ImageKey} eager sizes="(min-width: 64em) 580px, 100vw" />
@@ -38,7 +36,6 @@ const others = (await getServices()).filter((s) => s.id !== service.id);
 <section class="section" aria-labelledby="werk-title">
   <div class="container service-body">
     <div class="service-body__main">
-      <p class="eyebrow">Werkzaamheden</p>
       <h2 id="werk-title">{d.tasksTitle}</h2>
       <div class="prose service-body__prose">
         <Content />
@@ -62,7 +59,6 @@ const others = (await getServices()).filter((s) => s.id !== service.id);
 <section class="section section--alt" aria-labelledby="voordelen-title">
   <div class="container benefits-wrap">
     <div class="section-head">
-      <p class="eyebrow">Wat het je oplevert</p>
       <h2 id="voordelen-title">Waarom kiezen voor De Bruin Installatie</h2>
     </div>
     <ul class="benefits" role="list">
@@ -87,7 +83,6 @@ const others = (await getServices()).filter((s) => s.id !== service.id);
       <div class:list={['container', 'detail-split', { 'detail-split--single': !d.considerations || d.gallery.length === 0 }]}>
         {d.considerations && (
           <div class="considerations">
-            <p class="eyebrow">Goed om te weten</p>
             <h2 id="afwegingen-title">{d.considerations.title}</h2>
             {d.considerations.intro && <p class="muted">{d.considerations.intro}</p>}
             <ul class="check-list" role="list">
@@ -96,7 +91,7 @@ const others = (await getServices()).filter((s) => s.id !== service.id);
               ))}
             </ul>
             <a href={contactHref} class="link-arrow">
-              Bespreek het met ons <Icon name="arrow" />
+              Bespreek het met ons
             </a>
           </div>
         )}
@@ -119,7 +114,6 @@ const others = (await getServices()).filter((s) => s.id !== service.id);
     <section class="section section--alt" aria-labelledby="projecten-title">
       <div class="container">
         <div class="section-head">
-          <p class="eyebrow">Projecten</p>
           <h2 id="projecten-title">Uitgevoerd werk</h2>
         </div>
         <ul class="card-grid" role="list">
@@ -147,10 +141,9 @@ const others = (await getServices()).filter((s) => s.id !== service.id);
   <div class="container">
     <div class="section-head section-head--row">
       <div>
-        <p class="eyebrow">Meer diensten</p>
         <h2 id="andere-title">Ook bij ons voor</h2>
       </div>
-      <a href="/diensten/" class="link-arrow">Alle diensten <Icon name="arrow" /></a>
+      <a href="/diensten/" class="link-arrow">Alle diensten</a>
     </div>
     <ul class="other-services" role="list">
       {
@@ -195,13 +188,11 @@ const others = (await getServices()).filter((s) => s.id !== service.id);
   }
   .task-list :global(.icon) {
     flex: none;
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
-    padding: 0.2rem;
-    background: var(--color-green);
-    color: var(--color-ink);
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
+    color: var(--color-green-ink);
     stroke-width: 2.5;
-    margin-top: 0.1rem;
+    margin-top: 0.2rem;
   }
   @media (min-width: 64em) {
     .service-body {
@@ -235,7 +226,7 @@ const others = (await getServices()).filter((s) => s.id !== service.id);
     padding-top: 0.2rem;
     font-size: var(--fs-sm);
     font-weight: var(--fw-medium);
-    letter-spacing: 0.08em;
+    letter-spacing: 0;
     color: var(--color-green-ink);
   }
   .benefit h3 {

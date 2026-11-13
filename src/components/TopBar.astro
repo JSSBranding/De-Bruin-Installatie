@@ -29,45 +29,60 @@ import { company } from '../config/site';
 
 <style>
   .top-bar {
-    background: var(--color-navy);
-    color: var(--color-blue-soft);
-    font-size: var(--fs-xs);
+    background: var(--color-field);
+    color: var(--color-field-muted);
+    font-size: var(--text-sm);
   }
   .top-bar__inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-4);
+    gap: var(--space-md);
     min-block-size: 2.5rem;
   }
   .top-bar__list {
     display: flex;
-    gap: var(--space-6);
+    gap: var(--space-xl);
   }
   .top-bar li,
   .top-bar__phone {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-xs);
   }
   .top-bar :global(.icon) {
     inline-size: 0.95rem;
     block-size: 0.95rem;
-    color: var(--color-green);
+    color: var(--color-signal);
   }
   .top-bar a {
-    color: var(--color-white);
+    color: var(--color-field-ink);
     text-decoration: none;
   }
   .top-bar a:hover {
+    color: var(--color-field-ink);
     text-decoration: underline;
+  }
+  .top-bar a:active {
+    color: var(--color-field-muted);
   }
   .top-bar__phone {
     font-weight: var(--fw-medium);
   }
+  .top-bar__phone {
+    white-space: nowrap;
+  }
   @media (max-width: 39.99em) {
     .top-bar__mail {
       display: none;
+    }
+  }
+  @media (max-width: 29.99em) {
+    .top-bar__list {
+      display: none;
+    }
+    .top-bar__inner {
+      justify-content: flex-end;
     }
   }
 </style>

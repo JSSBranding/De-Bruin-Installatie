@@ -1,3 +1,14 @@
+/* Hallmark · shape: kept (home recomposed, structure of the first three sections kept) · genre: editorial · theme: brand · redesign: full
+ * paper: oklch(98.4% 0.004 95) · accent: oklch(47.5% 0.14 251.5) · display: Ubuntu 700 · body: Ubuntu 400 · hero: Stage (/), Banner (inner pages) · nav: edge-aligned bar, kept (the client's example: dark contact strip over a white bar, wordmark left, links, phone and one action right) · footer: index columns, kept (a real sitemap of six services and four pages) · signature: the phone number set as large as the van lettering, in the blue band
+ * axes: light/grotesk-sans/cool · posture: committed (one brand-blue band, navy strip and close; the accent elsewhere stays a signal) · contrast: pass · fold: pass · job: hire · copy: tightened, listed in the handoff · v2.0.0 */
+/* Hallmark · pre-emit critique: P3 H4 E4 S4 R4 V3 · weakest: V, the structure of hero, about and services is the client's and stays; the change is in material: stone paper instead of the blue wash, hairlines instead of shadowed cards, type at scale instead of icon tiles, the team photo and the van number as the two things the page is built on */
+/* Hallmark · waive 42 · nav and footer named in the stamp · kept at the client's request, from their own example */
+/* Hallmark · waive 44c · inner pages take the Banner posture named in the stamp · their first section starts on the first screen by design */
+/* Hallmark · waive 79 · Banner posture on inner pages · the head is short on purpose; the work starts right under it */
+/* Hallmark · waive 77 · the closing band and the dev-only demo projects (never built in production) · one band per page; demo content is a placeholder */
+/* Hallmark · waive 78 · contact page heads sit inside the form and the details column · they are item titles, not section heads */
+/* Hallmark · waive 49b · service names in the tiles are real phrases at two lines at most · shortening would rename the services */
+/* Hallmark · waive 81 · empty slots name the file still to supply (docs/ASSETS.md) · the client is sending photos; no stock stand-ins on a trade site */
 @import './tokens.css';
 
 /* ── Reset ─────────────────────────────────────────────── */
@@ -10,7 +21,8 @@ html {
   overflow-x: clip;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--header-h) + 1rem);
+  scroll-padding-top: calc(var(--header-h) + var(--space-md));
+  scrollbar-color: var(--color-muted) var(--color-paper);
 }
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -19,16 +31,21 @@ html {
 }
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  font-family: var(--font-sans);
-  font-size: var(--fs-base);
+  font-family: var(--font-body);
+  font-size: var(--text-md);
   line-height: var(--lh-body);
-  color: var(--text);
-  background: var(--surface);
+  color: var(--color-ink);
+  background: var(--color-paper);
   -webkit-font-smoothing: antialiased;
+  font-synthesis: none;
   overflow-x: clip;
+}
+::selection {
+  background: var(--color-paper-3);
+  color: var(--color-ink);
 }
 main {
   flex: 1 0 auto;
@@ -70,29 +87,39 @@ select {
 button {
   cursor: pointer;
 }
+[hidden] {
+  display: none !important;
+}
 
 /* ── Typografie ────────────────────────────────────────── */
 h1,
 h2,
 h3,
 h4 {
+  font-family: var(--font-display);
   font-weight: var(--fw-bold);
   line-height: var(--lh-snug);
-  color: var(--text);
+  color: var(--color-ink);
   text-wrap: balance;
+  overflow-wrap: break-word;
+  min-width: 0;
 }
 h1 {
   font-size: var(--fs-h1);
   line-height: var(--lh-tight);
-  letter-spacing: -0.015em;
+  letter-spacing: var(--tracking-display);
+  max-inline-size: 20ch;
 }
 h2 {
-  font-size: var(--fs-h2);
-  line-height: 1.15;
-  letter-spacing: -0.01em;
+  font-size: var(--text-section);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-display);
+  max-inline-size: 22ch;
 }
 h3 {
-  font-size: var(--fs-h3);
+  font-size: var(--text-title);
+  letter-spacing: -0.01em;
+  max-inline-size: 40ch;
 }
 h4 {
   font-size: var(--fs-h4);
@@ -107,54 +134,38 @@ a {
   color: var(--link);
   text-decoration-thickness: 1px;
   text-underline-offset: 0.2em;
+  transition: color var(--dur-micro) var(--ease-out);
 }
 a:hover {
-  color: var(--color-blue-dark);
+  color: var(--color-accent-hover);
   text-decoration-thickness: 2px;
 }
 
 .lead {
-  font-size: var(--fs-lead);
-  line-height: 1.55;
-  color: var(--text);
+  font-size: var(--text-lead);
+  line-height: 1.5;
+  color: var(--color-ink-2);
+  max-inline-size: 52ch;
 }
 .muted {
   color: var(--text-muted);
 }
 
-/* Label boven koppen: blauw met een groen lijntje ervoor */
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6em;
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-medium);
-  color: var(--color-blue);
-  margin-bottom: var(--space-3);
-}
-.eyebrow::before,
-.eyebrow--center::after {
-  content: '';
-  inline-size: 1.75rem;
-  block-size: 2px;
-  background: var(--color-green);
-  flex: none;
-}
-.eyebrow--light {
-  color: var(--color-white);
-}
-
 /* Prose (markdown-inhoud) */
+.prose {
+  max-inline-size: 65ch;
+}
 .prose > * + * {
-  margin-top: var(--space-4);
+  margin-top: var(--space-md);
 }
 .prose h2 {
-  font-size: var(--fs-h3);
-  margin-top: var(--space-7);
+  font-size: var(--text-title);
+  letter-spacing: -0.01em;
+  margin-top: var(--space-xl);
 }
 .prose h3 {
   font-size: var(--fs-h4);
-  margin-top: var(--space-6);
+  margin-top: var(--space-xl);
 }
 .prose ul {
   padding-left: 0;
@@ -162,40 +173,40 @@ a:hover {
 }
 .prose ul li {
   position: relative;
-  padding-left: 1.4rem;
+  padding-left: var(--space-lg);
 }
 .prose ul li + li {
-  margin-top: var(--space-2);
+  margin-top: var(--space-xs);
 }
 .prose ul li::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 0.62em;
-  inline-size: 0.5rem;
-  block-size: 0.5rem;
-  background: var(--color-blue);
+  top: 0.7em;
+  inline-size: var(--space-sm);
+  block-size: 2px;
+  background: var(--color-signal);
 }
 
-/* Lijst met vierkante opsommingstekens */
+/* Lijst met een groen streepje als opsommingsteken */
 .check-list {
   list-style: none;
   padding: 0;
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-sm);
 }
 .check-list li {
   position: relative;
-  padding-left: 1.6rem;
+  padding-left: var(--space-lg);
 }
 .check-list li::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 0.55em;
-  inline-size: 0.6rem;
-  block-size: 0.6rem;
-  background: var(--color-blue);
+  top: 0.75em;
+  inline-size: var(--space-sm);
+  block-size: 2px;
+  background: var(--color-signal);
 }
 
 /* ── Layout ────────────────────────────────────────────── */
@@ -212,26 +223,44 @@ a:hover {
   padding-block: var(--section-y);
 }
 .section--alt {
-  background: var(--surface-alt);
+  background: var(--color-paper-2);
 }
 .section--tight-top {
   padding-top: 0;
 }
 .section-head {
-  max-inline-size: 44rem;
-  margin-bottom: var(--space-7);
+  max-inline-size: 48rem;
+  margin-bottom: var(--space-2xl);
 }
 .section-head p {
-  margin-top: var(--space-4);
-  color: var(--text-muted);
+  margin-top: var(--space-lg);
+  font-size: var(--text-lead);
+  line-height: 1.5;
+  color: var(--color-ink-2);
+  max-inline-size: 46ch;
 }
+/* Kop links, regel rechts op dezelfde basislijn */
+.section-head--split,
 .section-head--center {
-  margin-inline: auto;
-  text-align: center;
+  max-inline-size: none;
+  display: grid;
+  gap: var(--space-lg) var(--gap-columns);
+  align-items: end;
 }
-.section-head--center p:not(.eyebrow) {
-  max-inline-size: 36rem;
-  margin-inline: auto;
+@media (min-width: 60rem) {
+  .section-head--split,
+  .section-head--center {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+  .section-head--split > h2,
+  .section-head--center > h2 {
+    grid-column: 1 / span 6;
+  }
+  .section-head--split > p,
+  .section-head--center > p {
+    grid-column: 8 / span 5;
+    margin-top: 0;
+  }
 }
 .section-head--row {
   max-inline-size: none;
@@ -239,124 +268,142 @@ a:hover {
   flex-wrap: wrap;
   align-items: end;
   justify-content: space-between;
-  gap: var(--space-5);
+  gap: var(--space-lg);
 }
 .section-head--row > div {
-  max-inline-size: 44rem;
+  max-inline-size: 48rem;
 }
 
 .stack > * + * {
-  margin-top: var(--stack, var(--space-4));
+  margin-top: var(--stack, var(--space-md));
 }
 
 /* ── Knoppen ───────────────────────────────────────────── */
 .btn {
-  --btn-bg: var(--color-blue);
-  --btn-fg: var(--color-white);
-  --btn-border: var(--color-blue);
+  --btn-bg: var(--color-accent);
+  --btn-fg: var(--color-accent-ink);
+  --btn-border: var(--color-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  min-block-size: 3rem;
-  padding: 0.75rem 1.4rem;
-  border: 2px solid var(--btn-border);
+  gap: var(--space-xs);
+  min-block-size: 48px;
+  padding: 0 var(--space-lg);
+  border: 1px solid var(--btn-border);
   border-radius: var(--radius-sm);
   background: var(--btn-bg);
   color: var(--btn-fg);
   font-weight: var(--fw-medium);
-  font-size: var(--fs-base);
+  font-size: var(--text-md);
   line-height: 1.2;
+  white-space: nowrap;
   text-decoration: none;
+  cursor: pointer;
   transition:
-    background-color var(--dur) var(--ease),
-    border-color var(--dur) var(--ease),
-    color var(--dur) var(--ease);
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
 }
 .btn:hover {
-  --btn-bg: var(--color-blue-dark);
-  --btn-border: var(--color-blue-dark);
+  --btn-bg: var(--color-accent-hover);
+  --btn-border: var(--color-accent-hover);
   color: var(--btn-fg);
   text-decoration: none;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn[aria-busy='true'] {
+  cursor: progress;
 }
 .btn .icon {
   inline-size: 1.1em;
   block-size: 1.1em;
-  transition: transform var(--dur) var(--ease);
-}
-.btn:hover .icon--arrow {
-  transform: translateX(3px);
 }
 .btn--lg {
-  min-block-size: 3.5rem;
-  padding-inline: 1.75rem;
+  min-block-size: 52px;
+  padding-inline: var(--space-xl);
 }
 .btn--secondary {
-  --btn-bg: var(--color-white);
-  --btn-fg: var(--color-blue);
-  --btn-border: var(--color-blue);
+  --btn-bg: transparent;
+  --btn-fg: var(--color-ink);
+  --btn-border: var(--color-rule-strong);
 }
 .btn--secondary:hover {
-  --btn-bg: var(--color-blue-tint);
-  --btn-fg: var(--color-blue-dark);
-  --btn-border: var(--color-blue-dark);
+  --btn-bg: var(--color-paper-2);
+  --btn-fg: var(--color-ink);
+  --btn-border: var(--color-ink);
 }
 .btn--light {
-  --btn-bg: var(--color-white);
-  --btn-fg: var(--color-blue);
-  --btn-border: var(--color-white);
+  --btn-bg: var(--color-paper);
+  --btn-fg: var(--color-ink);
+  --btn-border: var(--color-paper);
 }
 .btn--light:hover {
-  --btn-bg: var(--color-blue-tint);
-  --btn-fg: var(--color-blue-dark);
-  --btn-border: var(--color-blue-tint);
+  --btn-bg: var(--color-paper-3);
+  --btn-fg: var(--color-ink);
+  --btn-border: var(--color-paper-3);
 }
 .btn--ghost-light {
   --btn-bg: transparent;
-  --btn-fg: var(--color-white);
-  --btn-border: rgb(255 255 255 / 0.6);
+  --btn-fg: var(--color-field-ink);
+  --btn-border: var(--color-on-dark-edge);
 }
 .btn--ghost-light:hover {
-  --btn-bg: rgb(255 255 255 / 0.12);
-  --btn-fg: var(--color-white);
-  --btn-border: var(--color-white);
+  --btn-bg: var(--color-on-dark-hover);
+  --btn-fg: var(--color-field-ink);
+  --btn-border: var(--color-field-ink);
+}
+.on-dark .btn:focus-visible {
+  outline-color: var(--color-field-ink);
 }
 .btn-row {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-sm);
 }
 
-/* Tekstlink met pijl */
+/* Tekstlink */
 .link-arrow {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: var(--space-xs);
+  min-block-size: 44px;
   font-weight: var(--fw-medium);
-  text-decoration: none;
-  color: var(--color-blue);
-}
-.link-arrow .icon {
-  inline-size: 1em;
-  block-size: 1em;
-  transition: transform var(--dur) var(--ease);
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: var(--color-rule-strong);
+  text-underline-offset: 0.3em;
 }
 .link-arrow:hover {
-  text-decoration: underline;
+  text-decoration-color: currentColor;
 }
-.link-arrow:hover .icon {
-  transform: translateX(3px);
+.link-arrow:active {
+  color: var(--color-ink);
+}
+.link-arrow .icon {
+  display: none;
 }
 
 /* ── Toegankelijkheid ──────────────────────────────────── */
 :focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 2px solid var(--color-focus);
   outline-offset: 3px;
-  border-radius: 1px;
 }
 .on-dark :focus-visible,
 .on-dark:focus-visible {
-  outline-color: var(--color-white);
+  outline-color: var(--color-field-ink);
 }
 .visually-hidden {
   position: absolute !important;
@@ -365,24 +412,25 @@ a:hover {
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
 }
 .skip-link {
   position: absolute;
-  left: var(--space-4);
-  top: -100px;
-  z-index: 100;
-  padding: var(--space-3) var(--space-4);
-  background: var(--color-blue);
-  color: var(--color-white);
+  left: var(--space-md);
+  top: calc(-1 * var(--space-3xl));
+  z-index: var(--z-toast);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--color-accent);
+  color: var(--color-accent-ink);
   font-weight: var(--fw-medium);
   text-decoration: none;
 }
-.skip-link:focus {
-  top: var(--space-3);
-  color: var(--color-white);
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: var(--space-sm);
+  color: var(--color-accent-ink);
 }
 
 @media (prefers-reduced-motion: reduce) {
